@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mold Tracking</title>
+</head>
+<body>
+    <h2>Mold Tracking Form</h2>
+    <form id="moldForm">
+        <label for="moldPrefix">Mold Prefix:</label>
+        <select id="moldPrefix">
+            <option value="E603C">E603C</option>
+            <option value="MEB">MEB</option>
+        </select>
+
+        <label for="moldMiddle">Mold Middle:</label>
+        <select id="moldMiddle">
+            <option value="CNM">CNM</option>
+            <option value="ANM">ANM</option>
+        </select>
+
+        <label for="moldSuffix">Mold Suffix:</label>
+        <input type="text" id="moldSuffix" required="">
+
+        <label for="machineNumber">Machine Number:</label>
+        <input type="text" id="machineNumber" required="">
+
+        <label for="status">Status:</label>
+        <select id="status">
+            <option value="Repairing">Repairing</option>
+            <option value="Completed">Completed</option>
+            <option value="Inspection">Inspection</option>
+        </select>
+
+        <label for="maintenance">Maintenance:</label>
+        <input type="text" id="maintenance" required="">
+
+        <label for="maintenanceDateTime">Maintenance Date &amp; Time:</label>
+        <input type="datetime-local" id="maintenanceDateTime" required="">
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Mold Data</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Mold ID</th>
+                <th>Machine Number</th>
+                <th>Status</th>
+                <th>Maintenance</th>
+                <th>Maintenance Date</th>
+            </tr>
+        </thead>
+        <tbody id="moldTableBody"></tbody>
+    </table>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

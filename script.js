@@ -1,8 +1,8 @@
 <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
-    const SUPABASE_URL = "https://your-project-url.supabase.co";
-    const SUPABASE_ANON_KEY = "your-anon-key";
+    const SUPABASE_URL = "https://nxuzpdwzpzrxwyxdtqgo.supabase.co";
+    const SUPABASE_ANON_KEY = "nxuzpdwzpzrxwyxdtqgo";
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function saveMold() {

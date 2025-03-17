@@ -64,12 +64,63 @@
     </table>
 
     <script>
+        let moldData = [];
+
         function saveMold() {
-            alert("데이터 저장 기능 연결 예정");
+            const id = Date.now();
+            const mold = `${document.getElementById('moldType').value}/${document.getElementById('moldCategory').value}/${document.getElementById('moldNumber').value}`;
+            const status = document.getElementById('moldStatus').value;
+            const date = document.getElementById('statusDate').value;
+            const inspection = document.getElementById('inspectionStatus').value;
+            const inspector = document.getElementById('inspector').value;
+
+            const newMold = { id, mold, status, date, inspection, inspector };
+            moldData.push(newMold);
+            renderTable();
         }
 
         function fetchMolds() {
-            alert("데이터 조회 기능 연결 예정");
+            renderTable();
+        }
+
+        function renderTable() {
+            const tableBody = document.getElementById('moldTable');
+            tableBody.innerHTML = '';
+
+            moldData.forEach(mold => {
+                const row = `<tr>
+                    <td>${mold.id}</td>
+                    <td>${mold.mold}</td>
+                    <td>${mold.status} (${mold.date})</td>
+                    <td>${mold.inspection}</td>
+                    <td>${mold.inspector}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editMold(${mold.id})">수정</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteMold(${mold.id})">삭제</button>
+                    </td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        function editMold(id) {
+            const mold = moldData.find(m => m.id === id);
+            if (mold) {
+                document.getElementById('moldType').value = mold.mold.split('/')[0];
+                document.getElementById('moldCategory').value = mold.mold.split('/')[1];
+                document.getElementById('moldNumber').value = mold.mold.split('/')[2];
+                document.getElementById('moldStatus').value = mold.status;
+                document.getElementById('statusDate').value = mold.date;
+                document.getElementById('inspectionStatus').value = mold.inspection;
+                document.getElementById('inspector').value = mold.inspector;
+
+                deleteMold(id);
+            }
+        }
+
+        function deleteMold(id) {
+            moldData = moldData.filter(m => m.id !== id);
+            renderTable();
         }
     </script>
 

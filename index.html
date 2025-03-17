@@ -5,6 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mold Tracking</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body class="container mt-4">
 
@@ -13,7 +48,7 @@
 
     <form id="moldForm">
         <div class="mb-3">
-            <label class="form-label lang">Mold ID</label>
+            <label for="moldType" class="form-label lang">Mold ID</label>
             <select id="moldType" class="form-select">
                 <option value="MEB">MEB</option>
                 <option value="E603C">E603C</option>
@@ -26,7 +61,7 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label lang">Mold Status</label>
+            <label for="moldStatus" class="form-label lang">Mold Status</label>
             <select id="moldStatus" class="form-select">
                 <option value="Received">Received</option>
                 <option value="Shipped">Shipped</option>
@@ -35,12 +70,12 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label lang">Inspection Status</label>
+            <label for="inspectionStatus" class="form-label lang">Inspection Status</label>
             <input type="text" id="inspectionStatus" class="form-control">
         </div>
 
         <div class="mb-3">
-            <label class="form-label lang">Inspector</label>
+            <label for="inspector" class="form-label lang">Inspector</label>
             <input type="text" id="inspector" class="form-control">
         </div>
 
@@ -63,130 +98,15 @@
         <tbody id="moldTable"></tbody>
     </table>
 
-    <script type="module">
-        import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p>정말로 삭제하시겠습니까?</p>
+            <button class="btn btn-danger" id="confirmDelete">삭제</button>
+            <button class="btn btn-secondary" onclick="closeModal()">취소</button>
+        </div>
+    </div>
 
-        const SUPABASE_URL = "YOUR_SUPABASE_URL"; // 실제 URL로 교체
-        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // 실제 키로 교체
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        let language = "en";
-
-        function toggleLanguage() {
-            language = language === "en" ? "ko" : "en";
-            document.querySelectorAll('.lang').forEach(el => {
-                const translations = {
-                    "Mold ID": "몰드 ID",
-                    "Mold Status": "몰드 상태",
-                    "Inspection Status": "몰드 검사 상태",
-                    "Inspector": "검사자",
-                    "Mold": "몰드",
-                    "Status": "상태",
-                    "Actions": "관리"
-                };
-                el.textContent = language === "en" ? Object.keys(translations).find(key => translations[key] === el.textContent) || el.textContent : translations[el.textContent] || el.textContent;
-            });
-        }
-
-        async function saveMold() {
-            const moldId = document.getElementById("moldType").value + "/" +
-                document.getElementById("moldCategory").value + "/" +
-                document.getElementById("moldNumber").value;
-            const status = document.getElementById("moldStatus").value;
-            const statusDate = document.getElementById("statusDate").value;
-            const inspectionStatus = document.getElementById("inspectionStatus").value;
-            const inspector = document.getElementById("inspector").value;
-            const editId = document.getElementById("editId").value;
-
-            if (!statusDate) {
-                alert("날짜를 선택하세요!");
-                return;
-            }
-
-            const timestamp = new Date(statusDate).toISOString();
-
-            let result;
-            if (editId) {
-                result = await supabase
-                    .from('molds')
-                    .update({
-                        mold_id: moldId,
-                        status,
-                        status_date: timestamp,
-                        inspection_status: inspectionStatus,
-                        inspector
-                    })
-                    .eq('id', editId);
-            } else {
-                result = await supabase
-                    .from('molds')
-                    .insert([{
-                        mold_id: moldId,
-                        status,
-                        status_date: timestamp,
-                        inspection_status: inspectionStatus,
-                        inspector
-                    }]);
-            }
-
-            if (result.error) {
-                alert("데이터 저장 실패: " + result.error.message);
-            } else {
-                alert("데이터 저장 완료!");
-                fetchMolds();
-                document.getElementById('moldForm').reset();
-                document.getElementById('editId').value = '';
-            }
-        }
-
-        async function fetchMolds() {
-            const { data, error } = await supabase.from('molds').select('*');
-
-            if (error) {
-                alert("데이터 조회 실패: " + error.message);
-                return;
-            }
-
-            const tableBody = document.getElementById("moldTable");
-            tableBody.innerHTML = "";
-
-            data.forEach(mold => {
-                const localDate = new Date(mold.status_date).toLocaleString("ko-KR", {
-                    timeZone: "Asia/Seoul"
-                });
-
-                tableBody.innerHTML += `
-                    <tr>
-                        <td><span class="math-inline">\{mold\.id\}</td\>
-<td\></span>{mold.mold_id}</td>
-                        <td><span class="math-inline">\{mold\.status\} \(</span>{localDate})</td>
-                        <td><span class="math-inline">\{mold\.inspection\_status\}</td\>
-<td\></span>{mold.inspector}</td>
-                        <td>
-                            <button class="btn btn-warning btn-sm" onclick="editMold(<span class="math-inline">\{mold\.id\}\)"\>수정</button\>
-<button class\="btn btn\-danger btn\-sm" onclick\="deleteMold\(</span>{mold.id})">삭제</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        async function editMold(id) {
-            const { data, error } = await supabase.from('molds').select('*').eq('id', id).single();
-
-            if (error) {
-                alert("데이터 불러오기 실패: " + error.message);
-                return;
-            }
-
-            if (data) {
-                const [moldType, moldCategory, moldNumber] = data.mold_id.split('/');
-                document.getElementById('moldType').value = moldType;
-                document.getElementById('moldCategory').value = moldCategory;
-                document.getElementById('moldNumber').value = moldNumber;
-                document.getElementById('moldStatus').value = data.status;
-                document.getElementById('statusDate').value = data.status_date.split('T')[0];
-                document.getElementById('inspectionStatus').value = data.inspection_status;
-                document.getElementById('inspector').value = data.inspector;
-                document.getElementById('editId').value = data.id;
-            }
+    <script type="module" src="script.js"></script>
+</body>
+</html>

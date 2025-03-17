@@ -53,19 +53,22 @@
     <button onclick="toggleLanguage()" class="btn btn-secondary mb-3">Switch to Korean</button>
 
     <form id="moldForm">
+        <!-- Mold ID 및 Category 필드 -->
         <div class="mb-3">
             <label for="moldType" class="form-label lang">Mold ID</label>
             <select id="moldType" class="form-select">
                 <option value="MEB">MEB</option>
                 <option value="E603C">E603C</option>
             </select>
-            <select id="moldCategory" class="form-select mt-2">
+            <label for="moldCategory" class="form-label lang">Mold Category</label>
+            <select id="moldCategory" class="form-select">
                 <option value="CA">CA</option>
                 <option value="AN">AN</option>
             </select>
             <input type="text" id="moldNumber" class="form-control mt-2" placeholder="Enter Number">
         </div>
 
+        <!-- Mold Status 필드 -->
         <div class="mb-3">
             <label for="moldStatus" class="form-label lang">Mold Status</label>
             <select id="moldStatus" class="form-select">
@@ -75,11 +78,13 @@
             <input type="date" id="statusDate" class="form-control mt-2">
         </div>
 
+        <!-- Inspection Status 필드 -->
         <div class="mb-3">
             <label for="inspectionStatus" class="form-label lang">Inspection Status</label>
             <input type="text" id="inspectionStatus" class="form-control">
         </div>
 
+        <!-- Inspector 필드 -->
         <div class="mb-3">
             <label for="inspector" class="form-label lang">Inspector</label>
             <input type="text" id="inspector" class="form-control">
@@ -90,6 +95,7 @@
         <input type="hidden" id="editId">
     </form>
 
+    <!-- Mold 목록 테이블 -->
     <table class="table mt-4">
         <thead>
             <tr>
@@ -104,6 +110,7 @@
         <tbody id="moldTable"></tbody>
     </table>
 
+    <!-- 삭제 확인 모달 -->
     <div id="deleteModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>

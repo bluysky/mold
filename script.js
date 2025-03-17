@@ -150,11 +150,9 @@ function closeModal() {
 
 // 몰드 삭제
 async function deleteMold() {
-    console.log("삭제 요청 ID:", deleteId);  // 삭제하려는 ID 확인
     const { error } = await supabase.from('molds').delete().eq('id', deleteId);
 
     if (error) {
-        console.error("삭제 실패:", error.message);  // 에러 로그
         alert("삭제 실패: " + error.message);
     } else {
         alert("삭제 완료!");
@@ -164,9 +162,25 @@ async function deleteMold() {
 }
 
 // 삭제 확인 버튼 이벤트 리스너
-document.getElementById('confirmDelete').addEventListener('click', deleteMold);
-
-// 페이지 로드 시 데이터 조회
 document.addEventListener('DOMContentLoaded', () => {
+    // 페이지가 로드되면 데이터 불러오기
     fetchMolds();
+    
+    // 삭제 확인 버튼에 이벤트 리스너 추가
+    document.getElementById('confirmDelete').addEventListener('click', async () => {
+        console.log("삭제 요청 ID:", deleteId);  // 삭제하려는 ID 확인
+        const { error } = await supabase.from('molds').delete().eq('id', deleteId);
+
+        if (error) {
+            console.error("삭제 실패:", error.message);  // 에러 로그
+            alert("삭제 실패: " + error.message);
+        } else {
+            alert("삭제 완료!");
+            fetchMolds();  // 삭제 후 데이터 갱신
+        }
+        closeModal();  // 모달 닫기
+    });
+
+    // 언어 전환 버튼 이벤트 추가
+    document.getElementById('languageToggle').addEventListener('click', toggleLanguage);
 });

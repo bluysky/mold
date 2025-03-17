@@ -150,9 +150,11 @@ function closeModal() {
 
 // 몰드 삭제
 async function deleteMold() {
+    console.log("삭제 요청 ID:", deleteId);  // 삭제하려는 ID 확인
     const { error } = await supabase.from('molds').delete().eq('id', deleteId);
 
     if (error) {
+        console.error("삭제 실패:", error.message);  // 에러 로그
         alert("삭제 실패: " + error.message);
     } else {
         alert("삭제 완료!");

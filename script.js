@@ -2,7 +2,7 @@
     import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
     const SUPABASE_URL = "https://nxuzpdwzpzrxwyxdtqgo.supabase.co";
-    const SUPABASE_ANON_KEY = "nxuzpdwzpzrxwyxdtqgo";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54dXpwZHd6cHpyeHd5eGR0cWdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxNzE5MTUsImV4cCI6MjA1Nzc0NzkxNX0.BIDc-F9sLVhdjmnC6N-VjQwEe55nqkZV07X_X-NCLcY";
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function saveMold() {

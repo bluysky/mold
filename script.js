@@ -23,7 +23,7 @@ function toggleLanguage() {
     });
 }
 
-async function saveMold() {
+window.saveMold = async function () {
     const moldId = document.getElementById("moldType").value + "/" +
         document.getElementById("moldCategory").value + "/" +
         document.getElementById("moldNumber").value;
@@ -72,7 +72,8 @@ async function saveMold() {
         document.getElementById('moldForm').reset();
         document.getElementById('editId').value = '';
     }
-}
+};
+
 
 async function fetchMolds() {
     const { data, error } = await supabase.from('molds').select('*');

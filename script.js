@@ -14,9 +14,23 @@
         const inspectionStatus = document.getElementById("inspectionStatus").value;
         const inspector = document.getElementById("inspector").value;
 
+        if (!statusDate) {
+            alert("날짜를 선택하세요!");
+            return;
+        }
+
+        // ✅ 날짜를 timestamp 형식(ISO 8601)으로 변환
+        const timestamp = new Date(statusDate).toISOString();
+
         const { data, error } = await supabase
             .from('molds')
-            .insert([{ mold_id: moldId, status, status_date: statusDate, inspection_status: inspectionStatus, inspector }]);
+            .insert([{ 
+                mold_id: moldId, 
+                status, 
+                status_date: timestamp, // ✅ timestamp 저장 
+                inspection_status: inspectionStatus, 
+                inspector 
+            }]);
 
         if (error) {
             alert("데이터 저장 실패: " + error.message);
@@ -38,11 +52,16 @@
         tableBody.innerHTML = "";
         
         data.forEach(mold => {
+            // ✅ timestamp를 한국 시간 (KST)으로 변환
+            const localDate = new Date(mold.status_date).toLocaleString("ko-KR", {
+                timeZone: "Asia/Seoul"
+            });
+
             tableBody.innerHTML += `
                 <tr>
                     <td>${mold.id}</td>
                     <td>${mold.mold_id}</td>
-                    <td>${mold.status} (${mold.status_date})</td>
+                    <td>${mold.status} (${localDate})</td> <!-- 변환된 날짜 표시 -->
                     <td>${mold.inspection_status}</td>
                     <td>${mold.inspector}</td>
                     <td>

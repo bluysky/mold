@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +9,12 @@
 <body class="container mt-4">
 
     <h2 class="text-center">Mold Tracking System</h2>
-
-    <!-- 입력 폼 -->
+    <button onclick="toggleLanguage()" class="btn btn-secondary mb-3">Switch to Korean</button>
+    
+    <!-- Input Form -->
     <form id="moldForm">
         <div class="mb-3">
-            <label class="form-label">Mold ID</label>
+            <label class="form-label lang">Mold ID</label>
             <select id="moldType" class="form-select">
                 <option value="MEB">MEB</option>
                 <option value="E603C">E603C</option>
@@ -22,42 +23,42 @@
                 <option value="CA">CA</option>
                 <option value="AN">AN</option>
             </select>
-            <input type="text" id="moldNumber" class="form-control mt-2" placeholder="번호 입력">
+            <input type="text" id="moldNumber" class="form-control mt-2" placeholder="Enter Number">
         </div>
 
         <div class="mb-3">
-            <label class="form-label">몰드 상태</label>
+            <label class="form-label lang">Mold Status</label>
             <select id="moldStatus" class="form-select">
-                <option value="입고">입고</option>
-                <option value="출고">출고</option>
+                <option value="Received">Received</option>
+                <option value="Shipped">Shipped</option>
             </select>
             <input type="date" id="statusDate" class="form-control mt-2">
         </div>
 
         <div class="mb-3">
-            <label class="form-label">몰드 검사 상태</label>
+            <label class="form-label lang">Inspection Status</label>
             <input type="text" id="inspectionStatus" class="form-control">
         </div>
 
         <div class="mb-3">
-            <label class="form-label">검사자</label>
+            <label class="form-label lang">Inspector</label>
             <input type="text" id="inspector" class="form-control">
         </div>
 
-        <button type="button" class="btn btn-primary" onclick="saveMold()">저장</button>
-        <button type="button" class="btn btn-success" onclick="fetchMolds()">조회</button>
+        <button type="button" class="btn btn-primary" onclick="saveMold()">Save</button>
+        <button type="button" class="btn btn-success" onclick="fetchMolds()">Fetch</button>
     </form>
 
-    <!-- 데이터 리스트 -->
+    <!-- Data List -->
     <table class="table mt-4">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>몰드</th>
-                <th>상태</th>
-                <th>검사 상태</th>
-                <th>검사자</th>
-                <th>관리</th>
+                <th class="lang">Mold</th>
+                <th class="lang">Status</th>
+                <th class="lang">Inspection Status</th>
+                <th class="lang">Inspector</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody id="moldTable"></tbody>
@@ -65,6 +66,23 @@
 
     <script>
         let moldData = [];
+        let language = "en";
+
+        function toggleLanguage() {
+            language = language === "en" ? "ko" : "en";
+            document.querySelectorAll('.lang').forEach(el => {
+                const translations = {
+                    "Mold ID": "몰드 ID",
+                    "Mold Status": "몰드 상태",
+                    "Inspection Status": "몰드 검사 상태",
+                    "Inspector": "검사자",
+                    "Mold": "몰드",
+                    "Status": "상태",
+                    "Actions": "관리"
+                };
+                el.textContent = language === "en" ? Object.keys(translations).find(key => translations[key] === el.textContent) || el.textContent : translations[el.textContent] || el.textContent;
+            });
+        }
 
         function saveMold() {
             const id = Date.now();
@@ -95,8 +113,8 @@
                     <td>${mold.inspection}</td>
                     <td>${mold.inspector}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="editMold(${mold.id})">수정</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteMold(${mold.id})">삭제</button>
+                        <button class="btn btn-warning btn-sm" onclick="editMold(${mold.id})">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteMold(${mold.id})">Delete</button>
                     </td>
                 </tr>`;
                 tableBody.innerHTML += row;

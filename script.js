@@ -1,9 +1,11 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
-const SUPABASE_URL = "https://nxuzpdwzpzrxwyxdtqgo.supabase.co"; // 실제 URL로 교체
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54dXpwZHd6cHpyeHd5eGR0cWdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxNzE5MTUsImV4cCI6MjA1Nzc0NzkxNX0.BIDc-F9sLVhdjmnC6N-VjQwEe55nqkZV07X_X-NCLcY"; // 실제 키로 교체
+// Supabase 설정
+const SUPABASE_URL = "https://nxuzpdwzpzrxwyxdtqgo.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_ANON_KEY_HERE";  // 실제 키로 교체
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// 언어 전환
 let language = "en";
 let deleteId;
 
@@ -23,6 +25,7 @@ function toggleLanguage() {
     });
 }
 
+// 데이터 저장 함수
 window.saveMold = async function () {
     const moldId = document.getElementById("moldType").value + "/" +
         document.getElementById("moldCategory").value + "/" +
@@ -74,7 +77,7 @@ window.saveMold = async function () {
     }
 };
 
-
+// 몰드 데이터 조회
 async function fetchMolds() {
     const { data, error } = await supabase.from('molds').select('*');
 
@@ -112,6 +115,7 @@ async function fetchMolds() {
     }
 }
 
+// 몰드 수정
 async function editMold(id) {
     const { data, error } = await supabase.from('molds').select('*').eq('id', id).single();
 
@@ -133,15 +137,18 @@ async function editMold(id) {
     }
 }
 
+// 삭제 모달 열기
 function openModal(id) {
     deleteId = id;
     document.getElementById('deleteModal').style.display = "block";
 }
 
+// 삭제 모달 닫기
 function closeModal() {
     document.getElementById('deleteModal').style.display = "none";
 }
 
+// 몰드 삭제
 async function deleteMold() {
     const { error } = await supabase.from('molds').delete().eq('id', deleteId);
 
@@ -154,8 +161,10 @@ async function deleteMold() {
     closeModal();
 }
 
+// 삭제 확인 버튼 이벤트 리스너
 document.getElementById('confirmDelete').addEventListener('click', deleteMold);
 
+// 페이지 로드 시 데이터 조회
 document.addEventListener('DOMContentLoaded', () => {
     fetchMolds();
 });

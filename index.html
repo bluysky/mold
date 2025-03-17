@@ -10,8 +10,7 @@
 
     <h2 class="text-center">Mold Tracking System</h2>
     <button onclick="toggleLanguage()" class="btn btn-secondary mb-3">Switch to Korean</button>
-    
-    <!-- Input Form -->
+
     <form id="moldForm">
         <div class="mb-3">
             <label class="form-label lang">Mold ID</label>
@@ -47,9 +46,9 @@
 
         <button type="button" class="btn btn-primary" onclick="saveMold()">Save</button>
         <button type="button" class="btn btn-success" onclick="fetchMolds()">Fetch</button>
+        <input type="hidden" id="editId">
     </form>
 
-    <!-- Data List -->
     <table class="table mt-4">
         <thead>
             <tr>
@@ -64,8 +63,13 @@
         <tbody id="moldTable"></tbody>
     </table>
 
-    <script>
-        let moldData = [];
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+        const SUPABASE_URL = "YOUR_SUPABASE_URL"; // 실제 URL로 교체
+        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // 실제 키로 교체
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         let language = "en";
 
         function toggleLanguage() {
@@ -84,63 +88,105 @@
             });
         }
 
-        function saveMold() {
-            const id = Date.now();
-            const mold = `${document.getElementById('moldType').value}/${document.getElementById('moldCategory').value}/${document.getElementById('moldNumber').value}`;
-            const status = document.getElementById('moldStatus').value;
-            const date = document.getElementById('statusDate').value;
-            const inspection = document.getElementById('inspectionStatus').value;
-            const inspector = document.getElementById('inspector').value;
+        async function saveMold() {
+            const moldId = document.getElementById("moldType").value + "/" +
+                document.getElementById("moldCategory").value + "/" +
+                document.getElementById("moldNumber").value;
+            const status = document.getElementById("moldStatus").value;
+            const statusDate = document.getElementById("statusDate").value;
+            const inspectionStatus = document.getElementById("inspectionStatus").value;
+            const inspector = document.getElementById("inspector").value;
+            const editId = document.getElementById("editId").value;
 
-            const newMold = { id, mold, status, date, inspection, inspector };
-            moldData.push(newMold);
-            renderTable();
-        }
+            if (!statusDate) {
+                alert("날짜를 선택하세요!");
+                return;
+            }
 
-        function fetchMolds() {
-            renderTable();
-        }
+            const timestamp = new Date(statusDate).toISOString();
 
-        function renderTable() {
-            const tableBody = document.getElementById('moldTable');
-            tableBody.innerHTML = '';
+            let result;
+            if (editId) {
+                result = await supabase
+                    .from('molds')
+                    .update({
+                        mold_id: moldId,
+                        status,
+                        status_date: timestamp,
+                        inspection_status: inspectionStatus,
+                        inspector
+                    })
+                    .eq('id', editId);
+            } else {
+                result = await supabase
+                    .from('molds')
+                    .insert([{
+                        mold_id: moldId,
+                        status,
+                        status_date: timestamp,
+                        inspection_status: inspectionStatus,
+                        inspector
+                    }]);
+            }
 
-            moldData.forEach(mold => {
-                const row = `<tr>
-                    <td>${mold.id}</td>
-                    <td>${mold.mold}</td>
-                    <td>${mold.status} (${mold.date})</td>
-                    <td>${mold.inspection}</td>
-                    <td>${mold.inspector}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" onclick="editMold(${mold.id})">Edit</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteMold(${mold.id})">Delete</button>
-                    </td>
-                </tr>`;
-                tableBody.innerHTML += row;
-            });
-        }
-
-        function editMold(id) {
-            const mold = moldData.find(m => m.id === id);
-            if (mold) {
-                document.getElementById('moldType').value = mold.mold.split('/')[0];
-                document.getElementById('moldCategory').value = mold.mold.split('/')[1];
-                document.getElementById('moldNumber').value = mold.mold.split('/')[2];
-                document.getElementById('moldStatus').value = mold.status;
-                document.getElementById('statusDate').value = mold.date;
-                document.getElementById('inspectionStatus').value = mold.inspection;
-                document.getElementById('inspector').value = mold.inspector;
-
-                deleteMold(id);
+            if (result.error) {
+                alert("데이터 저장 실패: " + result.error.message);
+            } else {
+                alert("데이터 저장 완료!");
+                fetchMolds();
+                document.getElementById('moldForm').reset();
+                document.getElementById('editId').value = '';
             }
         }
 
-        function deleteMold(id) {
-            moldData = moldData.filter(m => m.id !== id);
-            renderTable();
-        }
-    </script>
+        async function fetchMolds() {
+            const { data, error } = await supabase.from('molds').select('*');
 
-</body>
-</html>
+            if (error) {
+                alert("데이터 조회 실패: " + error.message);
+                return;
+            }
+
+            const tableBody = document.getElementById("moldTable");
+            tableBody.innerHTML = "";
+
+            data.forEach(mold => {
+                const localDate = new Date(mold.status_date).toLocaleString("ko-KR", {
+                    timeZone: "Asia/Seoul"
+                });
+
+                tableBody.innerHTML += `
+                    <tr>
+                        <td><span class="math-inline">\{mold\.id\}</td\>
+<td\></span>{mold.mold_id}</td>
+                        <td><span class="math-inline">\{mold\.status\} \(</span>{localDate})</td>
+                        <td><span class="math-inline">\{mold\.inspection\_status\}</td\>
+<td\></span>{mold.inspector}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editMold(<span class="math-inline">\{mold\.id\}\)"\>수정</button\>
+<button class\="btn btn\-danger btn\-sm" onclick\="deleteMold\(</span>{mold.id})">삭제</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function editMold(id) {
+            const { data, error } = await supabase.from('molds').select('*').eq('id', id).single();
+
+            if (error) {
+                alert("데이터 불러오기 실패: " + error.message);
+                return;
+            }
+
+            if (data) {
+                const [moldType, moldCategory, moldNumber] = data.mold_id.split('/');
+                document.getElementById('moldType').value = moldType;
+                document.getElementById('moldCategory').value = moldCategory;
+                document.getElementById('moldNumber').value = moldNumber;
+                document.getElementById('moldStatus').value = data.status;
+                document.getElementById('statusDate').value = data.status_date.split('T')[0];
+                document.getElementById('inspectionStatus').value = data.inspection_status;
+                document.getElementById('inspector').value = data.inspector;
+                document.getElementById('editId').value = data.id;
+            }

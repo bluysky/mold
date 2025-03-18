@@ -134,7 +134,7 @@ function closeModal() {
 async function deleteMold() {
     const { error } = await supabase.from('molds').delete().eq('id', deleteId);
 
-    if (error) {
+    if (error) {    
         alert("삭제 실패: " + error.message);
     } else {
         alert("삭제 완료!");

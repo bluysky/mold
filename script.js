@@ -1,4 +1,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+import { editMold } from './script.js';
+console.log(editMold);  // 제대로 함수가 출력되는지 확인
+
+
 
 // 전역 변수로 deleteId 선언
 let deleteId; 

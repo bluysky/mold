@@ -160,3 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal();  // 모달 닫기
     });
 });
+
+
+window.editMold = editMold;
+window.openModal = openModal;
+window.fetchMolds = fetchMolds;
+window.closeModal = closeModal;

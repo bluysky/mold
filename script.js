@@ -125,9 +125,9 @@ function openModal(id) {
 
 // 삭제 모달 닫기
 function closeModal() {
-    document.getElementById('deleteModal').style.display = "none";
+    const modal = document.getElementById("deleteModal");
+    modal.style.display = "none";  // 모달을 닫는 동작
 }
-
 // 몰드 삭제
 async function deleteMold() {
     const { error } = await supabase.from('molds').delete().eq('id', deleteId);

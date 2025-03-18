@@ -148,7 +148,20 @@ async function deleteMold() {
 
 // 페이지 로드 후 이벤트 리스너
 document.addEventListener('DOMContentLoaded', () => {
-    fetchMolds(); // 페이지 로드 후 데이터 불러오기
+    // edit 및 delete 버튼 클릭 이벤트를 문서에서 직접 처리
+    document.body.addEventListener('click', (event) => {
+        const target = event.target;
+
+        if (target.classList.contains('btn-warning')) {
+            const id = target.getAttribute('data-id');
+            editMold(id); // editMold 호출
+        }
+
+        if (target.classList.contains('btn-danger')) {
+            const id = target.getAttribute('data-id');
+            openModal(id); // 삭제 확인 모달 열기
+        }
+    });
 });
 
 // 모듈로 함수들 내보내기

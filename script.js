@@ -157,4 +157,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 모듈로 함수들 내보내기
-export { saveMold, editMold, fetchMolds, openModal, closeModal, deleteMold };
+export { saveMold, editMold, fetchMolds, deleteMold };

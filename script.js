@@ -76,7 +76,7 @@ async function fetchMolds() {
                 timeZone: "Asia/Seoul"
             });
 
-            tableBody.innerHTML += 
+            tableBody.innerHTML += `
                 <tr>
                     <td>${mold.id}</td>
                     <td>${mold.mold_id}</td>
@@ -88,7 +88,7 @@ async function fetchMolds() {
                         <button class="btn btn-danger btn-sm" onclick="openModal(${mold.id})">삭제</button>
                     </td>
                 </tr>
-            ;
+            `;
         });
     } else {
         tableBody.innerHTML = "<tr><td colspan='6'>데이터가 없습니다.</td></tr>";

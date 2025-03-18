@@ -6,7 +6,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // 데이터 저장 함수
-window.saveMold = async function () {
+async function saveMold() {
     const moldId = document.getElementById("moldType").value + "/" +
         document.getElementById("moldCategory").value + "/" +
         document.getElementById("moldNumber").value;
@@ -51,11 +51,11 @@ window.saveMold = async function () {
         alert("데이터 저장 실패: " + result.error.message);
     } else {
         alert("데이터 저장 완료!");
-        fetchMolds();
-        document.getElementById('moldForm').reset();
-        document.getElementById('editId').value = '';
+        fetchMolds();  // 저장 후 데이터 다시 불러오기
+        document.getElementById('moldForm').reset();  // 폼 리셋
+        document.getElementById('editId').value = '';  // 편집 ID 초기화
     }
-};
+}
 
 // 몰드 데이터 조회
 async function fetchMolds() {
@@ -136,35 +136,17 @@ async function deleteMold() {
         alert("삭제 실패: " + error.message);
     } else {
         alert("삭제 완료!");
-        fetchMolds();
+        fetchMolds();  // 삭제 후 데이터 갱신
     }
     closeModal();
 }
 
-// 삭제 확인 버튼 이벤트 리스너
+// 페이지 로드 후 이벤트 리스너
 document.addEventListener('DOMContentLoaded', () => {
-    window.editMold = editMold;  // HTML 로드 후 등록
-    console.log("editMold 등록됨");
-    // 페이지가 로드되면 데이터 불러오기
-    fetchMolds();
-    
-    // 삭제 확인 버튼에 이벤트 리스너 추가
+    fetchMolds();  // 페이지 로드 시 데이터 조회
     document.getElementById('confirmDelete').addEventListener('click', async () => {
-        const { error } = await supabase.from('molds').delete().eq('id', deleteId);
-
-        if (error) {
-            console.error("삭제 실패:", error.message);
-            alert("삭제 실패: " + error.message);
-        } else {
-            alert("삭제 완료!");
-            fetchMolds();  // 삭제 후 데이터 갱신
-        }
-        closeModal();  // 모달 닫기
+        await deleteMold();
     });
 });
 
-
-window.editMold = editMold;
-window.openModal = openModal;
-window.fetchMolds = fetchMolds;
-window.closeModal = closeModal;
+export { saveMold, editMold, fetchMolds, openModal, closeModal };

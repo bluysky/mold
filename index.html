@@ -134,28 +134,27 @@
         </div>
     </div>
 
-    <script type="module">
-        import { saveMold, editMold, fetchMolds, openModal, closeModal } from './script.js';
-
-        // DOM이 로드되면 edit 버튼에 이벤트 리스너 추가
-        document.addEventListener('DOMContentLoaded', () => {
-            const editButtons = document.querySelectorAll('.btn-warning');
-            editButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const id = button.getAttribute('data-id');
-                    editMold(id); // editMold 호출
-                });
-            });
-
-            // 삭제 버튼에 대한 이벤트 리스너 추가
-            const deleteButtons = document.querySelectorAll('.btn-danger');
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const id = button.getAttribute('data-id');
-                    openModal(id); // 삭제 확인 모달 열기
-                });
+<script type="module">
+    import { saveMold, editMold, fetchMolds, openModal, closeModal, deleteMold } from './script.js';
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        // edit 버튼 클릭
+        document.querySelectorAll('.btn-warning').forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.getAttribute('data-id');
+                editMold(id); // editMold 함수 호출
             });
         });
-    </script>
+
+        // delete 버튼 클릭
+        document.querySelectorAll('.btn-danger').forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.getAttribute('data-id');
+                openModal(id); // openModal 함수 호출
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

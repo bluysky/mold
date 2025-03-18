@@ -1,4 +1,7 @@
-let deleteId;  // 전역 변수로 선언
+import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+// 전역 변수로 deleteId 선언
+let deleteId; 
 
 // Supabase 설정
 const SUPABASE_URL = "https://nxuzpdwzpzrxwyxdtqgo.supabase.co";
@@ -25,6 +28,7 @@ async function saveMold() {
 
     let result;
     if (editId) {
+        // 업데이트 요청
         result = await supabase
             .from('molds')
             .update({
@@ -36,6 +40,7 @@ async function saveMold() {
             })
             .eq('id', editId);
     } else {
+        // 새로운 데이터 삽입
         result = await supabase
             .from('molds')
             .insert([{
@@ -72,11 +77,11 @@ async function fetchMolds() {
 
     if (data && data.length > 0) {
         data.forEach(mold => {
-            const localDate = new Date(mold.status_date).toLocaleString("ko-KR", {
-                timeZone: "Asia/Seoul"
+            const localDate = new Date(mold.status_date).toLocaleString("en-US", {
+                timeZone: "America/New_York"
             });
 
-            tableBody.innerHTML += `
+            tableBody.innerHTML += ` 
                 <tr>
                     <td>${mold.id}</td>
                     <td>${mold.mold_id}</td>
@@ -84,7 +89,7 @@ async function fetchMolds() {
                     <td>${mold.inspection_status}</td>
                     <td>${mold.inspector}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="editMold(${mold.id})">수정</button>
+                        <button class="btn btn-warning btn-sm" data-id="${mold.id}" onclick="editMold(this)">수정</button>
                         <button class="btn btn-danger btn-sm" onclick="openModal(${mold.id})">삭제</button>
                     </td>
                 </tr>
@@ -96,7 +101,8 @@ async function fetchMolds() {
 }
 
 // 몰드 수정
-async function editMold(id) {
+async function editMold(button) {
+    const id = button.getAttribute('data-id');  // 버튼에서 ID 가져오기
     const { data, error } = await supabase.from('molds').select('*').eq('id', id).single();
 
     if (error) {
@@ -119,20 +125,21 @@ async function editMold(id) {
 
 // 삭제 모달 열기
 function openModal(id) {
-    deleteId = id;  // openModal에서 deleteId에 값 저장
+    deleteId = id;
     document.getElementById('deleteModal').style.display = "block";
 }
 
-// 삭제 모달 닫기
+// 모달을 닫는 함수
 function closeModal() {
     const modal = document.getElementById("deleteModal");
     modal.style.display = "none";  // 모달을 닫는 동작
 }
+
 // 몰드 삭제
 async function deleteMold() {
     const { error } = await supabase.from('molds').delete().eq('id', deleteId);
 
-    if (error) {
+    if (error) {    
         alert("삭제 실패: " + error.message);
     } else {
         alert("삭제 완료!");
@@ -143,8 +150,28 @@ async function deleteMold() {
 
 // 페이지 로드 후 이벤트 리스너
 document.addEventListener('DOMContentLoaded', () => {
-    fetchMolds();  // 페이지 로드 시 데이터 조회
-    document.getElementById('confirmDelete').addEventListener('click', async () => {
-        await deleteMold();  // 삭제 처리
+    // '수정' 버튼들에 이벤트 리스너 추가
+    document.querySelectorAll('.btn-warning').forEach(button => {
+        if (button.hasAttribute('data-id')) {
+            const id = button.getAttribute('data-id');
+            console.log("data-id 값: ", id);  // data-id 값 확인
+            button.addEventListener('click', () => {
+                editMold(id);  // editMold 호출
+            });
+        } else {
+            console.log("data-id 속성이 없습니다.");
+        }
+    });
+
+    // 삭제 버튼들에 대한 이벤트 리스너 추가
+    document.querySelectorAll('.btn-danger').forEach(button => {
+        button.addEventListener('click', () => {
+            const id = button.getAttribute('data-id');
+            openModal(id);  // 삭제 확인 모달 열기
+        });
     });
 });
+
+
+// 모듈로 함수들 내보내기
+export { saveMold, editMold, fetchMolds, openModal, closeModal, deleteMold };

@@ -75,8 +75,8 @@ async function fetchMolds() {
 
     if (data && data.length > 0) {
         data.forEach(mold => {
-            const localDate = new Date(mold.status_date).toLocaleString("ko-KR", {
-                timeZone: "Asia/Seoul"
+            const localDate = new Date(mold.status_date).toLocaleString("en-US", {
+                timeZone: "America/New_York"
             });
 
             tableBody.innerHTML += `

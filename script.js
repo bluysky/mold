@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+let deleteId;  // 전역 변수로 선언
 
 // Supabase 설정
 const SUPABASE_URL = "https://nxuzpdwzpzrxwyxdtqgo.supabase.co";
@@ -119,7 +119,7 @@ async function editMold(id) {
 
 // 삭제 모달 열기
 function openModal(id) {
-    deleteId = id;
+    deleteId = id;  // openModal에서 deleteId에 값 저장
     document.getElementById('deleteModal').style.display = "block";
 }
 
@@ -145,8 +145,6 @@ async function deleteMold() {
 document.addEventListener('DOMContentLoaded', () => {
     fetchMolds();  // 페이지 로드 시 데이터 조회
     document.getElementById('confirmDelete').addEventListener('click', async () => {
-        await deleteMold();
+        await deleteMold();  // 삭제 처리
     });
 });
-
-export { saveMold, editMold, fetchMolds, openModal, closeModal };

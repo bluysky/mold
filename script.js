@@ -1,8 +1,4 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js';
-import { editMold } from './script.js';
-console.log(editMold);  // 제대로 함수가 출력되는지 확인
-
-
 
 // 전역 변수로 deleteId 선언
 let deleteId; 
@@ -32,6 +28,7 @@ async function saveMold() {
 
     let result;
     if (editId) {
+        // 업데이트 요청
         result = await supabase
             .from('molds')
             .update({
@@ -43,6 +40,7 @@ async function saveMold() {
             })
             .eq('id', editId);
     } else {
+        // 새로운 데이터 삽입
         result = await supabase
             .from('molds')
             .insert([{
@@ -83,7 +81,7 @@ async function fetchMolds() {
                 timeZone: "America/New_York"
             });
 
-            tableBody.innerHTML += `
+            tableBody.innerHTML += ` 
                 <tr>
                     <td>${mold.id}</td>
                     <td>${mold.mold_id}</td>
@@ -176,6 +174,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // 모듈로 함수들 내보내기
-// script.js
 export { saveMold, editMold, fetchMolds, openModal, closeModal, deleteMold };
-

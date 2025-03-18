@@ -1,5 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
+let deleteId;  //전역 변수로 선언
+
 // Supabase 설정
 const SUPABASE_URL = "https://nxuzpdwzpzrxwyxdtqgo.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54dXpwZHd6cHpyeHd5eGR0cWdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxNzE5MTUsImV4cCI6MjA1Nzc0NzkxNX0.BIDc-F9sLVhdjmnC6N-VjQwEe55nqkZV07X_X-NCLcY";  // 실제 키로 교체
@@ -117,7 +119,7 @@ async function editMold(id) {
     }
 }
 
-let deleteId;  //전역 변수로 선언
+
 
 // 삭제 모달 열기
 function openModal(id) {

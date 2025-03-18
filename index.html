@@ -107,7 +107,21 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody id="moldTable"></tbody>
+        <tbody id="moldTable">
+            <!-- 아래는 예시 데이터로 수정되어야 할 부분 -->
+            <tr>
+                <td>1</td>
+                <td>MEB CA 12345</td>
+                <td>Received</td>
+                <td>Pending</td>
+                <td>John Doe</td>
+                <td>
+                    <!-- 수정 버튼에 data-id를 사용 -->
+                    <button class="btn btn-warning btn-sm" data-id="1">수정</button>
+                    <button class="btn btn-danger btn-sm" data-id="1">삭제</button>
+                </td>
+            </tr>
+        </tbody>
     </table>
 
     <!-- 삭제 확인 모달 -->
@@ -120,6 +134,28 @@
         </div>
     </div>
 
-    <script type="module" src="script.js"></script>
+    <script type="module">
+        import { saveMold, editMold, fetchMolds, openModal, closeModal } from './script.js';
+
+        // DOM이 로드되면 edit 버튼에 이벤트 리스너 추가
+        document.addEventListener('DOMContentLoaded', () => {
+            const editButtons = document.querySelectorAll('.btn-warning');
+            editButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const id = button.getAttribute('data-id');
+                    editMold(id); // editMold 호출
+                });
+            });
+
+            // 삭제 버튼에 대한 이벤트 리스너 추가
+            const deleteButtons = document.querySelectorAll('.btn-danger');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const id = button.getAttribute('data-id');
+                    openModal(id); // 삭제 확인 모달 열기
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,8 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
-// 전역 변수로 deleteId 선언
-let deleteId; 
-
 // Supabase 설정
 const SUPABASE_URL = "https://nxuzpdwzpzrxwyxdtqgo.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54dXpwZHd6cHpyeHd5eGR0cWdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxNzE5MTUsImV4cCI6MjA1Nzc0NzkxNX0.BIDc-F9sLVhdjmnC6N-VjQwEe55nqkZV07X_X-NCLcY";  // 실제 키로 교체
@@ -28,7 +25,6 @@ async function saveMold() {
 
     let result;
     if (editId) {
-        // 업데이트 요청
         result = await supabase
             .from('molds')
             .update({
@@ -40,7 +36,6 @@ async function saveMold() {
             })
             .eq('id', editId);
     } else {
-        // 새로운 데이터 삽입
         result = await supabase
             .from('molds')
             .insert([{
@@ -81,7 +76,7 @@ async function fetchMolds() {
                 timeZone: "America/New_York"
             });
 
-            tableBody.innerHTML += ` 
+            tableBody.innerHTML += `
                 <tr>
                     <td>${mold.id}</td>
                     <td>${mold.mold_id}</td>
@@ -171,7 +166,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
-
-// 모듈로 함수들 내보내기
-export { saveMold, editMold, fetchMolds, openModal, closeModal, deleteMold };

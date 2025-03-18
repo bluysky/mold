@@ -117,6 +117,8 @@ async function editMold(id) {
     }
 }
 
+let deleteId;  //전역 변수로 선언
+
 // 삭제 모달 열기
 function openModal(id) {
     deleteId = id;

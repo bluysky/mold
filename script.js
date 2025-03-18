@@ -147,10 +147,14 @@ async function deleteMold() {
 
 // 페이지 로드 후 이벤트 리스너
 document.addEventListener('DOMContentLoaded', () => {
-    fetchMolds();  // 페이지 로드 시 데이터 조회
-    document.getElementById('confirmDelete').addEventListener('click', async () => {
-        await deleteMold();
+    const editButtons = document.querySelectorAll('.btn-warning');
+    editButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const id = button.getAttribute('data-id');
+            editMold(id);
+        });
     });
 });
+
 
 export { saveMold, editMold, fetchMolds, openModal, closeModal };

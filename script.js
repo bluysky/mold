@@ -127,10 +127,14 @@ function openModal(id) {
     document.getElementById('deleteModal').style.display = "block";
 }
 
-// 삭제 모달 닫기
-function closeModal() {
-    document.getElementById('deleteModal').style.display = "none";
+// script.js
+
+// 모달을 닫는 함수
+export function closeModal() {
+    const modal = document.getElementById("deleteModal");
+    modal.style.display = "none";  // 모달을 닫는 동작
 }
+
 
 // 몰드 삭제
 async function deleteMold() {

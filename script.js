@@ -143,6 +143,8 @@ async function deleteMold() {
 
 // 삭제 확인 버튼 이벤트 리스너
 document.addEventListener('DOMContentLoaded', () => {
+    window.editMold = editMold;  // HTML 로드 후 등록
+    console.log("editMold 등록됨");
     // 페이지가 로드되면 데이터 불러오기
     fetchMolds();
     

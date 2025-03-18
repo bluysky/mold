@@ -87,7 +87,7 @@ async function fetchMolds() {
                     <td>${mold.inspection_status}</td>
                     <td>${mold.inspector}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="editMold(${mold.id})">수정</button>
+                        <button class="btn btn-warning btn-sm" data-id="${mold.id}" onclick="editMold(this)">수정</button>
                         <button class="btn btn-danger btn-sm" onclick="openModal(${mold.id})">삭제</button>
                     </td>
                 </tr>
@@ -99,7 +99,8 @@ async function fetchMolds() {
 }
 
 // 몰드 수정
-async function editMold(id) {
+async function editMold(button) {
+    const id = button.getAttribute('data-id');  // 버튼에서 ID 가져오기
     const { data, error } = await supabase.from('molds').select('*').eq('id', id).single();
 
     if (error) {
@@ -147,14 +148,8 @@ async function deleteMold() {
 
 // 페이지 로드 후 이벤트 리스너
 document.addEventListener('DOMContentLoaded', () => {
-    const editButtons = document.querySelectorAll('.btn-warning');
-    editButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const id = button.getAttribute('data-id');
-            editMold(id);
-        });
-    });
+    fetchMolds(); // 페이지 로드 후 데이터 불러오기
 });
 
 // 모듈로 함수들 내보내기
-export { saveMold, editMold, fetchMolds, deleteMold, closeModal };
+export { saveMold, editMold, fetchMolds, deleteMold, closeModal }; 

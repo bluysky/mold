@@ -109,7 +109,4 @@ window.fetchMolds = async function () {
                         <td><span class="math-inline">\{mold\.id\}</td\>
 <td\></span>{mold.mold_id}</td>
                         <td><span class="math-inline">\{mold\.status\} \(</span>{localDate})</td>
-                        <td><span class="math-inline">\{mold\.inspection\_status\}</td\>
-<td\></span>{mold.inspector}</td>
-                        <td>
-                            <button class="btn btn-warning btn-sm"
+                        <td>${mold

@@ -28,7 +28,67 @@ window.toggleLanguage = function () {
 
 // 데이터 저장 함수
 window.saveMold = async function () {
-    // ... (이전 코드와 동일) ...
+    try {
+        const moldId = document.getElementById("moldType").value + "/" +
+            document.getElementById("moldCategory").value + "/" +
+            document.getElementById("moldNumber").value;
+        const status = document.getElementById("moldStatus").value;
+        const inspectionStatus = document.getElementById("inspectionStatus").value;
+        const inspector = document.getElementById("inspector").value;
+        const editId = document.getElementById("editId").value;
+
+        if (!moldId || !status || !inspectionStatus || !inspector) {
+            alert("모든 필드를 입력하세요!");
+            return;
+        }
+
+        // 현재 날짜와 시간 생성 및 원하는 형식으로 변환
+        const now = new Date().toLocaleString("ko-KR", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        });
+
+        let result;
+        if (editId) {
+            result = await supabase
+                .from('molds')
+                .update({
+                    mold_id: moldId,
+                    status,
+                    status_date: now, // 현재 날짜와 시간 사용
+                    inspection_status: inspectionStatus,
+                    inspector
+                })
+                .eq('id', editId);
+        } else {
+            result = await supabase
+                .from('molds')
+                .insert([{
+                    mold_id: moldId,
+                    status,
+                    status_date: now, // 현재 날짜와 시간 사용
+                    inspection_status: inspectionStatus,
+                    inspector
+                }]);
+        }
+
+        if (result.error) {
+            console.error("데이터 저장 실패:", result.error);
+            alert("데이터 저장 실패: " + result.error.message);
+        } else {
+            alert("데이터 저장 완료!");
+            fetchMolds();
+            document.getElementById('moldForm').reset();
+            document.getElementById('editId').value = '';
+        }
+    } catch (error) {
+        console.error("데이터 저장 중 오류 발생:", error);
+        alert("데이터 저장 중 오류가 발생했습니다.");
+    }
 };
 
 // 몰드 데이터 조회

@@ -2,17 +2,19 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
 // Supabase 설정
 const SUPABASE_URL = "https://nxuzpdwzpzrxwyxdtqgo.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54dXpwZHd6cHpyeHd5eGR0cWdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxNzE5MTUsImV4cCI6MjA1Nzc0NzkxNX0.BIDc-F9sLVhdjmnC6N-VjQwEe55nqkZV07X_X-NCLcY"; // 실제 키로 교체
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54dXpwZHd6cHpyeHd5eGR0cWdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxNzE5MTUsImV4cCI6MjA1Nzc0NzkxNX0.BIDc-F9sLVhdjmnC6N-VjQwEe55nqkZV07X_X-NCLcY";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // 언어 전환
 let language = "en";
+let deleteId;
 
-function toggleLanguage() {
+window.toggleLanguage = function () {
     language = language === "en" ? "ko" : "en";
     document.querySelectorAll('.lang').forEach(el => {
         const translations = {
             "Mold ID": "몰드 ID",
+            "Mold Category": "몰드 카테고리",
             "Mold Status": "몰드 상태",
             "Inspection Status": "몰드 검사 상태",
             "Inspector": "검사자",
@@ -22,7 +24,7 @@ function toggleLanguage() {
         };
         el.textContent = language === "en" ? Object.keys(translations).find(key => translations[key] === el.textContent) || el.textContent : translations[el.textContent] || el.textContent;
     });
-}
+};
 
 // 데이터 저장 함수
 window.saveMold = async function () {

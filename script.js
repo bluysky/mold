@@ -100,10 +100,28 @@ window.fetchMolds = async function () {
             return;
         }
 
+// 몰드 데이터 조회
+window.fetchMolds = async function () {
+    try {
+        const { data, error } = await supabase.from(MOLDS_SCHEMA.TABLE_NAME).select('*');
+
+        const tableBody = document.getElementById("moldTable");
+        tableBody.innerHTML = "";
+
+        if (error) {
+            console.error("데이터 조회 실패:", error);
+            alert("데이터 조회 실패: " + error.message);
+            tableBody.innerHTML = "<tr><td colspan='6'>데이터 조회 실패</td></tr>";
+            return;
+        }
+
         if (data && data.length > 0) {
             data.forEach(mold => {
-                // 날짜 및 시간 형식 통일 (ISO 8601 형식으로 표시)
-                const localDate = new Date(mold.status_date).toLocaleString("us-EN", {
+                // UTC 날짜/시간을 Date 객체로 변환
+                const date = new Date(mold[MOLDS_SCHEMA.COLUMNS.STATUS_DATE]);
+
+                // 현지 시간으로 변환하여 표시
+                const localDate = date.toLocaleString(undefined, {
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit",
@@ -114,15 +132,15 @@ window.fetchMolds = async function () {
 
                 tableBody.innerHTML += `
                     <tr>
-                        <td>${mold.id}</td>
-                        <td>${mold.mold_id}</td>
-                        <td>${mold.status}</td>
-                        <td>${mold.inspection_status}</td>
-                        <td>${mold.inspector}</td>
-                        <td>${localDate}</td> 
+                        <td><span class="math-inline">\{mold\[MOLDS\_SCHEMA\.COLUMNS\.ID\]\}</td\>
+<td\></span>{mold[MOLDS_SCHEMA.COLUMNS.MOLD_ID]}</td>
+                        <td><span class="math-inline">\{mold\[MOLDS\_SCHEMA\.COLUMNS\.STATUS\]\}</td\>
+<td\></span>{mold[MOLDS_SCHEMA.COLUMNS.INSPECTION_STATUS]}</td>
+                        <td><span class="math-inline">\{mold\[MOLDS\_SCHEMA\.COLUMNS\.INSPECTOR\]\}</td\>
+<td\></span>{localDate}</td>
                         <td>
-                            <button onclick="window.editMold('${mold.id}')">Edit</button>
-                            <button onclick="window.deleteMold('${mold.id}')">Delete</button>
+                            <button onclick="window.editMold('<span class="math-inline">\{mold\[MOLDS\_SCHEMA\.COLUMNS\.ID\]\}'\)"\>Edit</button\>
+<button onclick\="window\.deleteMold\('</span>{mold[MOLDS_SCHEMA.COLUMNS.ID]}')">Delete</button>
                         </td>
                     </tr>
                 `;

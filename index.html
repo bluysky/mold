@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supabase Authentication</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -73,73 +72,16 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-
     </style>
-    <script>
-        // .env 파일에서 환경 변수를 가져오는 대신, 여기에 직접 선언합니다.
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL; // Replace with your Supabase URL
-        const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY; // Replace with your Supabase Anon Key
-
-        // Supabase 클라이언트 초기화
-        const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
-
-        async function signInWithEmail() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            const { error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                alert('Login Failed: ' + error.message);
-            } else {
-                alert('Login Successful!');
-                // Redirect to mold.html
-                window.location.href = '/mold.html';
-            }
-        }
-
-        async function signUpWithEmail() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            const { error } = await supabase.auth.signUp({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                alert('Sign Up Failed: ' + error.message);
-            } else {
-                alert('Sign Up Successful! Please confirm your email.');
-                // Redirect to login
-                window.location.href = '/index.html';
-            }
-        }
-
-
-
-        async function checkUser() {
-            const { data: { user } } = await supabase.auth.getUser();
-
-            if (user) {
-               // Redirect to mold.html if user is logged in
-                window.location.href = '/mold.html';
-            } else {
-                console.log('No user logged in.');
-            }
-        }
-    </script>
 </head>
-<body onload="checkUser()">
+<body>
     <div class="container">
         <h1>Login / Sign Up</h1>
         <input type="email" id="email" placeholder="Email">
         <input type="password" id="password" placeholder="Password">
-        <button onclick="signInWithEmail()">Login</button>
-        <button onclick="signUpWithEmail()">Sign Up</button>
+        <button id="loginBtn">Login</button>
+        <button id="signupBtn">Sign Up</button>
     </div>
+    <script type="module" src="./login.js"></script>
 </body>
 </html>

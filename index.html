@@ -77,8 +77,8 @@
     </style>
     <script>
         // .env 파일에서 환경 변수를 가져오는 대신, 여기에 직접 선언합니다.
-        const supabaseUrl = "YOUR_SUPABASE_URL"; // Replace with your Supabase URL
-        const supabaseAnonKey = "YOUR_SUPABASE_ANON_KEY"; // Replace with your Supabase Anon Key
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL; // Replace with your Supabase URL
+        const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY; // Replace with your Supabase Anon Key
 
         // Supabase 클라이언트 초기화
         const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);

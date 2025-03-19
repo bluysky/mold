@@ -121,8 +121,8 @@ window.fetchMolds = async function () {
                         <td>${mold.inspector}</td>
                         <td>${localDate}</td> 
                         <td>
-                            <button onclick="window.editMold('${mold.id}')">수정</button>
-                            <button onclick="window.deleteMold('${mold.id}')">삭제</button>
+                            <button onclick="window.editMold('${mold.id}')">Edit</button>
+                            <button onclick="window.deleteMold('${mold.id}')">Delete</button>
                         </td>
                     </tr>
                 `;

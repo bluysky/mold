@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="container mt-4">
-    <h2 class="text-center">Mold Tracking System</h2>
-    <button onclick="window.toggleLanguage()" class="btn btn-secondary mb-3">Switch to Korean</button>
+    <h2 class="text-center lang">Mold Tracking System</h2>
+    <button onclick="window.toggleLanguage()" class="btn btn-secondary mb-3 lang">Switch to Korean</button>
     <form id="moldForm">
         <div class="mb-3">
             <label for="moldType" class="form-label lang">Mold ID</label>
@@ -25,7 +25,7 @@
                 <option value="CA">CA</option>
                 <option value="AN">AN</option>
             </select>
-            <input type="text" id="moldNumber" class="form-control mt-2" placeholder="Enter Number">
+            <input type="text" id="moldNumber" class="form-control mt-2 lang" placeholder="Enter Number">
         </div>
         <div class="mb-3">
             <label for="moldStatus" class="form-label lang">Mold Status</label>
@@ -53,13 +53,13 @@
     <table class="table mt-4">
         <thead>
             <tr>
-                <th>ID</th>
+                <th class="lang">ID</th>
                 <th class="lang">Mold</th>
                 <th class="lang">Status</th>
                 <th class="lang">Inspection Status</th>
                 <th class="lang">Inspector</th>
                 <th class="lang">Date/Time</th>
-                <th>Actions</th>
+                <th class="lang">Actions</th>
             </tr>
         </thead>
         <tbody id="moldTable">
@@ -68,9 +68,9 @@
     <div id="deleteModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <p>Are you sure you're going to delete it?</p>
-            <button class="btn btn-danger" id="confirmDelete">delete</button>
-            <button class="btn btn-secondary" onclick="closeModal()">cancel</button>
+            <p class="lang">Are you sure you're going to delete it?</p>
+            <button class="btn btn-danger lang" id="confirmDelete">delete</button>
+            <button class="btn btn-secondary lang" onclick="closeModal()">cancel</button>
         </div>
     </div>
     <script type="module" src="./script.js"></script>

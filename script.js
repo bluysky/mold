@@ -185,7 +185,7 @@
 
         const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
         const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+        //const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
         console.log('Supabase URL:', supabaseUrl);
         console.log('Supabase Anon Key:', supabaseAnonKey);
@@ -406,7 +406,10 @@
         });
 
         // 페이지 로드 시 몰드 데이터 조회
+
+        let supabase
         window.onload = function() {
+            const supabase = createClient(supabaseUrl, supabaseAnonKey);
             fetchMolds();
             window.toggleLanguage(); // 초기에 언어 설정 적용
         };

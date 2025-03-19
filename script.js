@@ -20,7 +20,8 @@ window.toggleLanguage = function () {
             "Inspector": "검사자",
             "Mold": "몰드",
             "Status": "상태",
-            "Actions": "관리"
+            "Actions": "관리",
+            "Date/Time": "날짜/시간" // "Date/Time" 추가
         };
         el.textContent = language === "en" ? Object.keys(translations).find(key => translations[key] === el.textContent) || el.textContent : translations[el.textContent] || el.textContent;
     });
@@ -102,7 +103,7 @@ window.fetchMolds = async function () {
         if (data && data.length > 0) {
             data.forEach(mold => {
                 // 날짜 및 시간 형식 통일 (ISO 8601 형식으로 표시)
-                const localDate = new Date(mold.status_date).toLocaleString("us-EN", {
+                const localDate = new Date(mold.status_date).toLocaleString("ko-KR", {
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit",
@@ -115,12 +116,13 @@ window.fetchMolds = async function () {
                     <tr>
                         <td>${mold.id}</td>
                         <td>${mold.mold_id}</td>
-                        <td>${mold.status} (${localDate})</td>
+                        <td>${mold.status}</td>
                         <td>${mold.inspection_status}</td>
                         <td>${mold.inspector}</td>
+                        <td>${localDate}</td> 
                         <td>
-                            <button onclick="window.editMold('${mold.id}')">edit</button>
-                            <button onclick="window.deleteMold('${mold.id}')">delete</button>
+                            <button onclick="window.editMold('${mold.id}')">수정</button>
+                            <button onclick="window.deleteMold('${mold.id}')">삭제</button>
                         </td>
                     </tr>
                 `;

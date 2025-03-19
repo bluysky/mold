@@ -7,7 +7,6 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // 언어 전환
 let language = "en";
-let deleteId;
 
 function toggleLanguage() {
     language = language === "en" ? "ko" : "en";
@@ -106,7 +105,23 @@ window.fetchMolds = async function () {
 
                 tableBody.innerHTML += `
                     <tr>
-                        <td><span class="math-inline">\{mold\.id\}</td\>
-<td\></span>{mold.mold_id}</td>
-                        <td><span class="math-inline">\{mold\.status\} \(</span>{localDate})</td>
-                        <td>${mold
+                        <td>${mold.id}</td>
+                        <td>${mold.mold_id}</td>
+                        <td>${mold.status} (${localDate})</td>
+                        <td>${mold.inspection_status}</td>
+                        <td>${mold.inspector}</td>
+                        <td>
+                            <button onclick="editMold('${mold.id}')">수정</button>
+                            <button onclick="deleteMold('${mold.id}')">삭제</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        } else {
+            tableBody.innerHTML = "<tr><td colspan='6'>데이터가 없습니다.</td></tr>";
+        }
+    } catch (error) {
+        console.error("데이터 조회 중 오류 발생:", error);
+        alert("데이터 조회 중 오류가 발생했습니다.");
+    }
+};

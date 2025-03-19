@@ -91,7 +91,7 @@ window.editMold = function (moldId) {
             document.getElementById('moldNumber').value = mold.mold_id.split('/')[2];
             document.getElementById('moldStatus').value = mold.status;
             document.getElementById('statusDate').value = mold.status_date.substring(0, 16);
-            document.getElementById('inspectionStatus').value = mold.inspection_status;
+            document.getElementById('inspectionStatus').value = mold.inspection_status; // 수정된 부분
             document.getElementById('inspector').value = mold.inspector;
             document.getElementById('editId').value = mold.id;
         }

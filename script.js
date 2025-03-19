@@ -100,17 +100,20 @@ window.fetchMolds = async function () {
             return;
         }
 
-        if (data && data.length > 0) {
-            data.forEach(mold => {
-                // 날짜 및 시간 형식 통일 (ISO 8601 형식으로 표시)
-                const localDate = new Date(mold.status_date).toLocaleString("us-EN", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit"
-                });
+    if (data && data.length > 0) {
+        data.forEach(mold => {
+            // UTC 날짜/시간을 Date 객체로 변환
+            const date = new Date(mold.status_date);
+
+            // 현지 시간으로 변환하여 표시
+            const localDate = date.toLocaleString(undefined, {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+            });
 
                 tableBody.innerHTML += `
                     <tr>

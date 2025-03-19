@@ -99,17 +99,10 @@ window.fetchMolds = async function () {
             return;
         }
 
-        if (data && data.length > 0) {
+         if (data && data.length > 0) {
             data.forEach(mold => {
-                // 날짜 및 시간 형식 통일
-                const localDate = new Date(mold.status_date).toLocaleString("ko-KR", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit"
-                });
+                // 날짜 및 시간 형식 통일 (ISO 8601 형식으로 표시)
+                const localDate = mold.status_date;
 
                 tableBody.innerHTML += `
                     <tr>
@@ -119,8 +112,8 @@ window.fetchMolds = async function () {
                         <td>${mold.inspection_status}</td>
                         <td>${mold.inspector}</td>
                         <td>
-                            <button onclick="editMold('${mold.id}')">수정</button>
-                            <button onclick="deleteMold('${mold.id}')">삭제</button>
+                            <button onclick="window.editMold('${mold.id}')">수정</button>
+                            <button onclick="window.deleteMold('${mold.id}')">삭제</button>
                         </td>
                     </tr>
                 `;

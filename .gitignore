@@ -1,3 +1,16 @@
+
+
+# .env pass
+.env
+
+# node_modules directory pass
+node_modules/
+
+# build result pass
+build/
+dist/
+
+
 # System files
 .DS_Store
 Thumbs.db

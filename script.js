@@ -42,15 +42,8 @@ window.saveMold = async function () {
             return;
         }
 
-        // 현재 날짜와 시간 생성 및 원하는 형식으로 변환
-        const now = new Date().toLocaleString("ko-KR", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit"
-        });
+        // 현재 날짜와 시간을 ISO 8601 형식으로 변환
+        const now = new Date().toISOString();
 
         let result;
         if (editId) {
@@ -59,7 +52,7 @@ window.saveMold = async function () {
                 .update({
                     mold_id: moldId,
                     status,
-                    status_date: now, // 현재 날짜와 시간 사용
+                    status_date: now, // ISO 8601 형식 사용
                     inspection_status: inspectionStatus,
                     inspector
                 })
@@ -70,7 +63,7 @@ window.saveMold = async function () {
                 .insert([{
                     mold_id: moldId,
                     status,
-                    status_date: now, // 현재 날짜와 시간 사용
+                    status_date: now, // ISO 8601 형식 사용
                     inspection_status: inspectionStatus,
                     inspector
                 }]);

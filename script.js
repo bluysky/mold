@@ -103,7 +103,7 @@ window.fetchMolds = async function () {
         if (data && data.length > 0) {
             data.forEach(mold => {
                 // 날짜 및 시간 형식 통일 (ISO 8601 형식으로 표시)
-                const localDate = new Date(mold.status_date).toLocaleString("ko-KR", {
+                const localDate = new Date(mold.status_date).toLocaleString("us-EN", {
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit",

@@ -42,8 +42,8 @@
             <label for="inspector" class="form-label lang">Inspector</label>
             <input type="text" id="inspector" class="form-control">
         </div>
-        <button type="button" class="btn btn-primary" onclick="saveMold()">Save</button>
-        <button type="button" class="btn btn-success" onclick="fetchMolds()">Fetch</button>
+        <button type="button" class="btn btn-primary" onclick="window.saveMold()">Save</button>
+        <button type="button" class="btn btn-success" onclick="window.fetchMolds()">Fetch</button>
         <input type="hidden" id="editId">
     </form>
     <table class="table mt-4">
@@ -60,4 +60,14 @@
         <tbody id="moldTable">
             </tbody>
     </table>
-    <div id="deleteModal
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p>정말로 삭제하시겠습니까?</p>
+            <button class="btn btn-danger" id="confirmDelete">삭제</button>
+            <button class="btn btn-secondary" onclick="closeModal()">취소</button>
+        </div>
+    </div>
+    <script type="module" src="./script.js"></script>
+</body>
+</html>

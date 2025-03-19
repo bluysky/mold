@@ -21,7 +21,7 @@ window.toggleLanguage = function () {
             "Mold": "몰드",
             "Status": "상태",
             "Actions": "관리",
-            "Date/Time": "날짜/시간" // "Date/Time" 추가
+            "Date/Time": "날짜/시간"
         };
         el.textContent = language === "en" ? Object.keys(translations).find(key => translations[key] === el.textContent) || el.textContent : translations[el.textContent] || el.textContent;
     });
@@ -52,8 +52,8 @@ window.saveMold = async function () {
                 .from('molds')
                 .update({
                     mold_id: moldId,
-                    status,
-                    status_date: now, // ISO 8601 형식 사용
+                    status: status, // 상태만 저장
+                    status_date: now, // 날짜/시간 별도 저장
                     inspection_status: inspectionStatus,
                     inspector
                 })
@@ -63,8 +63,8 @@ window.saveMold = async function () {
                 .from('molds')
                 .insert([{
                     mold_id: moldId,
-                    status,
-                    status_date: now, // ISO 8601 형식 사용
+                    status: status, // 상태만 저장
+                    status_date: now, // 날짜/시간 별도 저장
                     inspection_status: inspectionStatus,
                     inspector
                 }]);
@@ -147,12 +147,12 @@ window.editMold = function (moldId) {
         }
         if (data && data.length > 0) {
             const mold = data[0];
-            document.getElementById('moldType').value = mold.mold_id.split('/')[0];
-            document.getElementById('moldCategory').value = mold.mold_id.split('/')[1];
-            document.getElementById('moldNumber').value = mold.mold_id.split('/')[2];
+            const moldParts = mold.mold_id.split('/');
+            document.getElementById('moldType').value = moldParts[0];
+            document.getElementById('moldCategory').value = moldParts[1];
+            document.getElementById('moldNumber').value = moldParts[2];
             document.getElementById('moldStatus').value = mold.status;
-            document.getElementById('statusDate').value = mold.status_date.substring(0, 16);
-            document.getElementById('inspectionStatus').value = mold.inspection_status; // 수정된 부분
+            document.getElementById('inspectionStatus').value = mold.inspection_status;
             document.getElementById('inspector').value = mold.inspector;
             document.getElementById('editId').value = mold.id;
         }

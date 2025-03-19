@@ -108,8 +108,14 @@ window.fetchMolds = async function () {
 
         if (data && data.length > 0) {
             data.forEach(mold => {
+                // 날짜 및 시간 형식 통일
                 const localDate = new Date(mold.status_date).toLocaleString("ko-KR", {
-                    timeZone: "Asia/Seoul"
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit"
                 });
 
                 tableBody.innerHTML += `

@@ -1,63 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mold Tracking</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        /* ... (기존 스타일) ... */
-    </style>
-</head>
-<body class="container mt-4">
-    <h2 class="text-center">Mold Tracking System</h2>
-    <button onclick="toggleLanguage()" class="btn btn-secondary mb-3">Switch to Korean</button>
-    <form id="moldForm">
-        <div class="mb-3">
-            <label for="moldType" class="form-label lang">Mold ID</label>
-            <select id="moldType" class="form-select">
-                <option value="MEB">MEB</option>
-                <option value="E603C">E603C</option>
-            </select>
-            <label for="moldCategory" class="form-label lang">Mold Category</label>
-            <select id="moldCategory" class="form-select">
-                <option value="CA">CA</option>
-                <option value="AN">AN</option>
-            </select>
-            <input type="text" id="moldNumber" class="form-control mt-2" placeholder="Enter Number">
-        </div>
-        <div class="mb-3">
-            <label for="moldStatus" class="form-label lang">Mold Status</label>
-            <select id="moldStatus" class="form-select">
-                <option value="Received">Received</option>
-                <option value="Shipped">Shipped</option>
-            </select>
-            <input type="date" id="statusDate" class="form-control mt-2">
-        </div>
-        <div class="mb-3">
-            <label for="inspectionStatus" class="form-label lang">Inspection Status</label>
-            <input type="text" id="inspectionStatus" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="inspector" class="form-label lang">Inspector</label>
-            <input type="text" id="inspector" class="form-control">
-        </div>
-        <button type="button" class="btn btn-primary" onclick="saveMold()">Save</button>
-        <button type="button" class="btn btn-success" onclick="fetchMolds()">Fetch</button>
-        <input type="hidden" id="editId">
-    </form>
-    <table class="table mt-4">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th class="lang">Mold</th>
-                <th class="lang">Status</th>
-                <th class="lang">Inspection Status</th>
-                <th class="lang">Inspector</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="moldTable">
-            </tbody>
-    </table>
-    <div id="deleteModal
+import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+// Supabase 설정
+const SUPABASE_URL = "https://nxuzpdwzpzrxwyxdtqgo.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54dXpwZHd6cHpyeHd5eGR0cWdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxNzE5MTUsImV4cCI6MjA1Nzc0NzkxNX0.BIDc-F9sLVhdjmnC6N-VjQwEe55nqkZV07X_X-NCLcY"; // 실제 키로 교체
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// 언어 전환
+let language = "en";
+let deleteId;
+
+function toggleLanguage() {
+    language = language === "en" ? "ko" : "en";
+    document.querySelectorAll('.lang').forEach(el => {
+        const translations = {
+            "Mold ID": "몰드 ID",
+            "Mold Status": "몰드 상태",
+            "Inspection Status": "몰드 검사 상태",
+            "Inspector": "검사자",
+            "Mold": "몰드",
+            "Status": "상태",
+            "Actions": "관리"
+        };
+        el.textContent = language === "en" ? Object.keys(translations).find(key => translations[key] === el.textContent) || el.textContent : translations[el.textContent] || el.textContent;
+    });
+}
+
+// 데이터 저장 함수
+window.saveMold = async function () {
+    try {
+        const moldId = document.getElementById("moldType").value + "/" +
+            document.getElementById("moldCategory").value + "/" +
+            document.getElementById("moldNumber").value;
+        const status = document.getElementById("moldStatus").value;
+        const statusDate = document.getElementById("statusDate").value;
+        const inspectionStatus = document.getElementById("inspectionStatus").value;
+        const inspector = document.getElementById("inspector").value;
+        const editId = document.getElementById("editId").value;
+
+        if (!moldId || !status || !statusDate || !inspectionStatus || !inspector) {
+            alert("모든 필드를 입력하세요!");
+            return;
+        }
+
+        const timestamp = new Date(statusDate).toISOString();
+
+        let result;
+        if (editId) {
+            result = await supabase
+                .from('molds')
+                .update({
+                    mold_id: moldId,
+                    status,
+                    status_date: timestamp,
+                    inspection_status: inspectionStatus,
+                    inspector
+                })
+                .eq('id', editId);
+        } else {
+            result = await supabase
+                .from('molds')
+                .insert([{
+                    mold_id: moldId,
+                    status,
+                    status_date: timestamp,
+                    inspection_status: inspectionStatus,
+                    inspector
+                }]);
+        }
+
+        if (result.error) {
+            console.error("데이터 저장 실패:", result.error);
+            alert("데이터 저장 실패: " + result.error.message);
+        } else {
+            alert("데이터 저장 완료!");
+            fetchMolds();
+            document.getElementById('moldForm').reset();
+            document.getElementById('editId').value = '';
+        }
+    } catch (error) {
+        console.error("데이터 저장 중 오류 발생:", error);
+        alert("데이터 저장 중 오류가 발생했습니다.");
+    }
+};
+
+// 몰드 데이터 조회
+window.fetchMolds = async function () {
+    try {
+        const { data, error } = await supabase.from('molds').select('*');
+
+        const tableBody = document.getElementById("moldTable");
+        tableBody.innerHTML = "";
+
+        if (error) {
+            console.error("데이터 조회 실패:", error);
+            alert("데이터 조회 실패: " + error.message);
+            tableBody.innerHTML = "<tr><td colspan='6'>데이터 조회 실패</td></tr>";
+            return;
+        }
+
+        if (data && data.length > 0) {
+            data.forEach(mold => {
+                const localDate = new Date(mold.status_date).toLocaleString("ko-KR", {
+                    timeZone: "Asia/Seoul"
+                });
+
+                tableBody.innerHTML += `
+                    <tr>
+                        <td><span class="math-inline">\{mold\.id\}</td\>
+<td\></span>{mold.mold_id}</td>
+                        <td><span class="math-inline">\{mold\.status\} \(</span>{localDate})</td>
+                        <td><span class="math-inline">\{mold\.inspection\_status\}</td\>
+<td\></span>{mold.inspector}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm"

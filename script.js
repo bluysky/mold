@@ -180,7 +180,8 @@
         </div>
     </div>
 
-    <script type="module">
+    <script type="module" src="./script.js"></script>
+    <script type="module" src="./language.js"></script>
         import { createClient } from '@supabase/supabase-js';
 
         const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;

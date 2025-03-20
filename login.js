@@ -1,8 +1,10 @@
-// Vite 환경에서 import.meta.env 사용 가능
 import { createClient } from '@supabase/supabase-js';
 
+// Vite 환경 변수 로드
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// supabase 인스턴스 생성
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 document.getElementById('loginBtn').addEventListener('click', async () => {

@@ -75,6 +75,16 @@
     </style>
 </head>
 <body>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // 이제 Supabase 라이브러리를 사용할 수 있습니다.
+        const { createClient } = supabase;
+        const supabaseUrl = 'YOUR_SUPABASE_URL';
+        const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
+        const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+
+        // Supabase 코드 작성...
+    </script>    
     <div class="container">
         <h1>Login / Sign Up</h1>
         <input type="email" id="email" placeholder="Email">

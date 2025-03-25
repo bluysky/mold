@@ -25,6 +25,15 @@ function MoldList() {
     navigate('/'); // 로그인 페이지로 이동
   };
 
+  const handleDelete = async (id) => {
+    const { error } = await supabase.from('molds').delete().eq('id', id);
+    if (error) {
+      console.error('몰드 삭제 실패:', error);
+    } else {
+      setMolds(molds.filter((mold) => mold.id !== id));
+    }
+  };
+
   return (
     <div>
       <h2>몰드 목록</h2>
@@ -39,6 +48,7 @@ function MoldList() {
             <th>검사자</th>
             <th>소유자 ID</th>
             <th>몰드 카운트</th>
+            <th>삭제</th>
           </tr>
         </thead>
         <tbody>
@@ -52,6 +62,9 @@ function MoldList() {
               <td>{mold.inspector}</td>
               <td>{mold.owner_id}</td>
               <td>{mold.mold_count}</td>
+              <td>
+                <button onClick={() => handleDelete(mold.id)}>삭제</button>
+              </td>
             </tr>
           ))}
         </tbody>

@@ -24,6 +24,8 @@ function App() {
       <Routes>
         <Route path="/" element={session ? <Navigate to="/mold-list" /> : <Login />} />
         <Route path="/mold-list" element={session ? <MoldList /> : <Navigate to="/" />} />
+        <Route path="/mold-create" element={<MoldCreate />} />
+        <Route path="/mold-edit/:id" element={<MoldEdit />} />
       </Routes>
     </Router>
   );

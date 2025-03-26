@@ -14,30 +14,30 @@ function MoldCreate() {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+    // useEffect(() => {
     // 컴포넌트가 마운트될 때 현재 날짜와 시간을 기본값으로 설정
-    const now = new Date();
-    const formattedDateTime = formatDate(now);
-    setstatus_date(formattedDateTime);
-  }, []);
+    // const now = new Date();
+    // const formattedDateTime = formatDate(now);
+    // setstatus_date(formattedDateTime);
+    // }, []);
 
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day} ${hours}:${minutes}`; // 또는 원하는 포맷
-  };
+    // const formatDate = (date) => {
+    // const year = date.getFullYear();
+    // const month = String(date.getMonth() + 1).padStart(2, '0');
+    // const day = String(date.getDate()).padStart(2, '0');
+    // const hours = String(date.getHours()).padStart(2, '0');
+    // const minutes = String(date.getMinutes()).padStart(2, '0');
+    // return `${year}-${month}-${day} ${hours}:${minutes}`; // 또는 원하는 포맷
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log('status_date:', status_date); // 제출되는 status_date 값 확인
     const { error } = await supabase.from('molds').insert([
       {
         mold_id: moldId,
         status: status,
-        status_date: status_date, // 상태 날짜 데이터베이스에 저장
+        status_date: status_date,
         inspection_status: inspectionStatus,
         inspector: inspector,
         mold_count: moldCount,

@@ -91,7 +91,11 @@ function MoldList() {
                   </Button>
                 </TableCell>
                 <TableCell>
-                  <Link to={`/mold-edit/${mold.id}`}>수정</Link>
+                  <Link to={`/mold-edit/${mold.id}`} style={{ textDecoration: 'none' }}>
+                    <Button variant="outlined" color="primary">
+                      수정
+                    </Button>
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}

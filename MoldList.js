@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   Table,
   TableBody,
@@ -71,6 +71,7 @@ function MoldList() {
               <TableCell>소유자 ID</TableCell>
               <TableCell>몰드 카운트</TableCell>
               <TableCell>삭제</TableCell>
+              <TableCell>수정</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -88,6 +89,9 @@ function MoldList() {
                   <Button variant="outlined" color="secondary" onClick={() => handleDelete(mold.id)}>
                     삭제
                   </Button>
+                </TableCell>
+                <TableCell>
+                  <Link to={`/mold-edit/${mold.id}`}>수정</Link>
                 </TableCell>
               </TableRow>
             ))}

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './components/Login';
 import MoldList from './components/MoldList';
 import MoldCreate from './components/MoldCreate';
-import MoldEdit from './components/MoldEdit'; // Import 수정
+import MoldEdit from './components/MoldEdit';
 import { supabase } from './supabaseClient';
 
 function App() {
@@ -21,10 +21,11 @@ function App() {
   }, []);
 
   return (
-    <Router basename="/mold"> {/* basename prop 추가 */}
+    <Router basename="/mold">
       <Routes>
-        <Route path="/" element={session ? <Navigate to="/mold-list" replace /> : <Login />} />
-        <Route path="/mold-list" element={session ? <MoldList /> : <Navigate to="/" replace />} />
+        <Route path="/" element={<Navigate to="/login" replace />} /> {/* 초기 접속 시 /login으로 리다이렉트 */}
+        <Route path="/login" element={<Login />} /> {/* /login 경로에 Login 컴포넌트 연결 */}
+        <Route path="/mold-list" element={session ? <MoldList /> : <Navigate to="/login" replace />} /> {/* 로그인 안된 경우 /login으로 리다이렉트 */}
         <Route path="/mold-create" element={<MoldCreate />} />
         <Route path="/mold-edit/:id" element={<MoldEdit />} />
       </Routes>

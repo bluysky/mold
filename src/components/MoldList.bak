@@ -137,12 +137,6 @@ function MoldList() {
         }
     };
 
-    // 조회 화면으로 이동하는 함수
-    const handleSearchClick = () => {
-        navigate('/mold-search'); // MoldSearch.js로 이동
-    };
-
-
     if (loading) return <CircularProgress/>;
     if (error) return <Alert severity="error">{error}</Alert>;
 
@@ -152,10 +146,7 @@ function MoldList() {
             <Button variant="contained" color="primary" onClick={handleAddNewClick} style={{marginBottom: '10px'}}>
                 새 몰드 추가
             </Button>
-            {/* 조회 버튼 추가 */}
-            <Button variant="contained" color="primary" onClick={handleSearchClick} style={{ marginBottom: '10px' }}>
-                몰드 조회
-            </Button>
+
             {isAddingNew && (
                 <Paper style={{padding: '15px', marginBottom: '10px'}}>
                     <Typography variant="h6">새 몰드 추가</Typography>
@@ -304,5 +295,5 @@ function MoldList() {
         </div>
     );
 }
-export default MoldList;
 
+export default MoldList;

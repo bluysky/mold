@@ -7,6 +7,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #f0f0f0; /* 기본적인 배경색 */
   color: #333; /* 기본적인 글자색 */
+  line-height: 1.5; /* 기본적인 줄 간격 (가독성 향상) */
 }
 
 code {
@@ -14,4 +15,45 @@ code {
     monospace;
 }
 
-/* 필요에 따라 추가적인 전역 스타일 정의 */
+/* 작은 화면 (최대 600px 너비)에 대한 스타일 */
+@media (max-width: 600px) {
+  body {
+    font-size: 16px; /* 작은 화면에서 기본 글꼴 크기 증가 */
+    padding: 10px; /* 여백 추가 */
+  }
+
+  /* 필요에 따라 다른 요소들의 스타일 조정 (예시) */
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  /* 버튼 스타일 조정 (터치 영역 확보) */
+  button {
+    padding: 10px 15px;
+    font-size: 1rem;
+  }
+
+  /* 테이블 관련 스타일 조정 (MoldList.js에서 사용될 수 있음) */
+  .MuiTableCell-root { /* Material-UI 테이블 셀 스타일 */
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+}
+
+/* 중간 크기 화면 (최소 601px ~ 최대 960px 너비)에 대한 스타일 */
+@media (min-width: 601px) and (max-width: 960px) {
+  body {
+    font-size: 15px;
+  }
+}
+
+/* 큰 화면 (최소 961px 너비)에 대한 스타일 (기본 스타일 유지 또는 추가 조정) */
+@media (min-width: 961px) {
+  body {
+    font-size: 14px; /* 기본 글꼴 크기 */
+  }
+}

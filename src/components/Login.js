@@ -2,22 +2,31 @@
 
 import React, { useState } from 'react';
 import { supabase } from '../supabaseClient';
-import { useNavigate } from 'react-router-dom'; // React Router v6 사용
+import { useNavigate, Link } from 'react-router-dom'; // Link 컴포넌트 import
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!email) {
+      setError('이메일 주소를 입력해주세요.');
+      return;
+    }
+    if (!password) {
+      setError('비밀번호를 입력해주세요.');
+      return;
+    }
+
     const { user, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       setError(error.message);
     } else {
       console.log('로그인 성공:', user);
-      navigate('/mold-list'); // 몰드 목록 페이지로 이동
+      navigate('/mold-list');
     }
   };
 
@@ -40,6 +49,9 @@ function Login() {
         />
         <button type="submit">로그인</button>
       </form>
+      <p>
+        아직 계정이 없으신가요? <Link to="/signup">회원가입</Link>
+      </p>
     </div>
   );
 }

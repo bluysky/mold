@@ -3,6 +3,31 @@
 import React, {useState, useEffect} from 'react';
 import {supabase} from '../supabaseClient';
 import {useNavigate, useParams} from 'react-router-dom';
+import {
+    TextField,
+    Button,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Typography,
+    Box,
+} from '@mui/material';
+
+const engToKorMap = {
+    'Mold Edit': '몰드 수정',
+    'Mold ID': '몰드 ID',
+    'Status': '상태',
+    'Inspection Status': '검사 상태',
+    'Inspector': '검사자',
+    'Mold Count': '몰드 카운트',
+    'Edit': '수정',
+    'Received': '접수됨',
+    'Shipped': '배송됨',
+    'PASS': '합격',
+    'WAITING': '대기',
+    'FAIL': '불합격',
+};
 
 function MoldEdit() {
     const {id} = useParams();
@@ -12,12 +37,13 @@ function MoldEdit() {
     const [inspector, setInspector] = useState('');
     const [moldCount, setMoldCount] = useState(0);
     const navigate = useNavigate();
+    const [currentLanguage, setCurrentLanguage] = useState('en');
 
     useEffect(() => {
         async function fetchMold() {
             const {data, error} = await supabase.from('molds').select('*').eq('id', id).single();
             if (error) {
-                console.error('몰드 데이터 가져오기 실패:', error);
+                console.error(translate('Failed to fetch mold data:'), error);
             } else {
                 setMoldId(data.mold_id);
                 setStatus(data.status);
@@ -43,74 +69,83 @@ function MoldEdit() {
             })
             .eq('id', id);
         if (error) {
-            console.error('mold edit 실패:', error);
+            console.error(translate('Failed to edit mold:'), error);
         } else {
             navigate('/mold-list');
         }
     };
-    
+    const toggleLanguage = () => {
+        setCurrentLanguage(prevLang => (prevLang === 'ko' ? 'en' : 'en'));
+    };
+
+    const translate = (key) => {
+        return engToKorMap[key] || key;
+    };
     return (
-        <div>
-            <h2>mold edit</h2>
+        <Box sx={{maxWidth: 600, margin: '0 auto', mt: 4, p: 2}}>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
+                <Typography variant="h5">{translate('Mold Edit')}</Typography>
+                <Button variant="outlined" onClick={toggleLanguage}>
+                    {currentLanguage === 'ko' ? 'English' : '한국어'}
+                </Button>
+            </Box>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="moldId">mold ID:</label>
-                    <input
-                        type="text"
-                        placeholder="mold ID"
-                        value={moldId}
-                        onChange={(e) => setMoldId(e.target.value)}
-                        id="moldId"
-                        name="moldId"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="status">status:</label>
-                    <select value={status} onChange={(e) => setStatus(e.target.value)} id="status" name="status">
-                        <option value="Received">Received</option>
-                        <option value="Shipped">Shipped</option>
+                <TextField
+                    label={translate('Mold ID')}
+                    value={moldId}
+                    onChange={(e) => setMoldId(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                <FormControl fullWidth margin="normal">
+                    <InputLabel id="status-label">{translate('Status')}</InputLabel>
+                    <Select
+                        labelId="status-label"
+                        id="status"
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                        label={translate('Status')}
+                    >
+                        <MenuItem value="Received">{translate('Received')}</MenuItem>
+                        <MenuItem value="Shipped">{translate('Shipped')}</MenuItem>
                         {/* 필요한 상태 옵션 추가 */}
-                    </select>
-                </div>
-                <div>
-                    <label htmlFor="inspectionStatus">Inspection Status:</label>
-                    <select
+                    </Select>
+                </FormControl>
+                <FormControl fullWidth margin="normal">
+                    <InputLabel id="inspectionStatus-label">{translate('Inspection Status')}</InputLabel>
+                    <Select
+                        labelId="inspectionStatus-label"
+                        id="inspectionStatus"
                         value={inspectionStatus}
                         onChange={(e) => setInspectionStatus(e.target.value)}
-                        id="inspectionStatus"
-                        name="inspectionStatus"
+                        label={translate('Inspection Status')}
                     >
-                        <option value="PASS">PASS</option>
-                        <option value="WAITING">WAITING</option>
-                        <option value="FAIL">FAIL</option>
+                        <MenuItem value="PASS">{translate('PASS')}</MenuItem>
+                        <MenuItem value="WAITING">{translate('WAITING')}</MenuItem>
+                        <MenuItem value="FAIL">{translate('FAIL')}</MenuItem>
                         {/* 필요한 Inspection Status 옵션 추가 */}
-                    </select>
-                </div>
-                <div>
-                    <label htmlFor="inspector">검사자:</label>
-                    <input
-                        type="text"
-                        placeholder="검사자"
-                        value={inspector}
-                        onChange={(e) => setInspector(e.target.value)}
-                        id="inspector"
-                        name="inspector"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="moldCount">mold count:</label>
-                    <input
-                        type="number"
-                        placeholder="count"
-                        value={moldCount}
-                        onChange={(e) => setMoldCount(e.target.value)}
-                        id="moldCount"
-                        name="moldCount"
-                    />
-                </div>
-                <button type="submit">edit</button>
+                    </Select>
+                </FormControl>
+                <TextField
+                    label={translate('Inspector')}
+                    value={inspector}
+                    onChange={(e) => setInspector(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                <TextField
+                    label={translate('Mold Count')}
+                    type="number"
+                    value={moldCount}
+                    onChange={(e) => setMoldCount(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                <Button type="submit" variant="contained" color="primary" sx={{mt: 2}}>
+                    {translate('Edit')}
+                </Button>
             </form>
-        </div>
+        </Box>
     );
 }
 

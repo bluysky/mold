@@ -26,51 +26,51 @@ function SignUp() {
     if (error) {
       setError(error.message);
     } else {
-      console.log('회원가입 성공:', data);
-      alert('회원가입이 완료되었습니다. 이메일을 확인해주세요.');
+      console.log('Membership registration successful:', data);
+      alert('Your membership registration has been completed. Please check your email.');
       navigate('/'); // 또는 로그인 페이지로 리다이렉트
     }
   };
 
   return (
     <div>
-      <h2>회원가입</h2>
+      <h2>Signup</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSignUp}>
         <div>
-          <label htmlFor="email">이메일:</label>
+          <label htmlFor="email">email:</label>
           <input
             type="email"
             id="email"
-            placeholder="이메일 주소"
+            placeholder="Email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
         <div>
-          <label htmlFor="password">비밀번호:</label>
+          <label htmlFor="password">password:</label>
           <input
             type="password"
             id="password"
-            placeholder="비밀번호"
+            placeholder="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
         <div>
-          <label htmlFor="confirmPassword">비밀번호 확인:</label>
+          <label htmlFor="confirmPassword">verify password:</label>
           <input
             type="password"
             id="confirmPassword"
-            placeholder="비밀번호 확인"
+            placeholder="verify password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
         </div>
-        <button type="submit">회원가입</button>
+        <button type="submit">join the membership</button>
       </form>
     </div>
   );

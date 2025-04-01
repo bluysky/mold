@@ -1,0 +1,27 @@
+{
+  "Mold List": "몰드 목록",
+  "New Mold": "새 몰드",
+  "Mold ID": "몰드 ID",
+  "Status": "상태",
+  "Status Date/Time": "상태 날짜/시간",
+  "Inspection Status": "검사 상태",
+  "Save": "저장",
+  "Cancel": "취소",
+  "Search Molds": "몰드 조회",
+  "ID": "ID",
+  "Delete": "삭제",
+  "Edit": "수정",
+  "Logout": "로그아웃",
+  "Add New Mold": "새 몰드 추가",
+  "Received": "접수됨",
+  "Shipped": "배송됨",
+  "WAITING": "대기",
+  "PASS": "합격",
+  "FAIL": "불합격",
+  "Owner ID": "소유자 ID",
+  "Mold Count": "몰드 수량",
+  "Please enter Mold ID.": "몰드 ID를 입력해주세요.",
+  "Please log in to continue.": "로그인 후 이용해주세요.",
+  "New mold added successfully.": "새 몰드가 추가되었습니다."
+  // ... 기타 키 추가
+}

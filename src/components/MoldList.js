@@ -3,6 +3,8 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {supabase} from '../supabaseClient';
 import {useNavigate, Link} from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import i18n from '../i18n';
 import {
     Paper,
     Button,
@@ -42,6 +44,7 @@ function MoldList() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const [newMoldId, setNewMoldId] = useState('');
     const [newStatus, setNewStatus] = useState('');
     const [newStatusDate, setNewStatusDate] = useState('');
@@ -50,6 +53,7 @@ function MoldList() {
     // const [newOwnerId, setNewOwnerId] = useState('');
     const [newMoldCount, setNewMoldCount] = useState('');
     const [isAddingNew, setIsAddingNew] = useState(false);
+
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -72,6 +76,11 @@ function MoldList() {
     const handleLogout = async () => {
         await supabase.auth.signOut();
         navigate('/');
+    };
+
+    const changeLanguage = (lang) => {
+        i18n.changeLanguage(lang);
+        localStorage.setItem('language', lang);
     };
 
     const handleDelete = async (id) => {
@@ -101,22 +110,16 @@ function MoldList() {
 
     const handleSaveNewMold = async () => {
         if (!newMoldId) {
-            alert('몰드 ID를 입력해주세요.');
+            alert(t('Please enter Mold ID.'));
             return;
         }
         try {
-            // 현재 사용자 세션 정보 가져오기
             const {data: session, error: sessionError} = await supabase.auth.getSession();
-
-            // 세션 정보가 없거나 사용자 ID가 없는 경우 에러 처리
             if (sessionError || !session?.session?.user?.id) {
-                alert('로그인 후 이용해주세요.');
+                alert(t('Please log in to continue.'));
                 return;
             }
-
-            // 현재 로그인한 사용자의 UUID
             const currentUserId = session.session.user.id;
-
             const {error} = await supabase.from('molds').insert([
                 {
                     mold_id: newMoldId,
@@ -124,109 +127,119 @@ function MoldList() {
                     status_date: newStatusDate,
                     inspection_status: newInspectionStatus,
                     inspector: newInspector,
-                    owner_id: currentUserId, // 현재 사용자 ID를 owner_id에 할당
+                    owner_id: currentUserId,
                     mold_count: parseInt(newMoldCount, 10) || 0,
                 },
             ]);
             if (error) throw error;
             handleCancelAdd();
             fetchMolds();
-            alert('새 몰드가 추가되었습니다.');
+            alert(t('New mold added successfully.'));
         } catch (err) {
             setError(err.message);
         }
     };
 
-    // 조회 화면으로 이동하는 함수
     const handleSearchClick = () => {
-        navigate('/mold-search'); // MoldSearch.js로 이동
+        navigate('/mold-search');
     };
-
 
     if (loading) return <CircularProgress/>;
     if (error) return <Alert severity="error">{error}</Alert>;
 
     return (
         <div>
-            <h2>몰드 목록</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <Typography variant="h5">{t('Mold List')}</Typography>
+                <Select value={i18n.language} onChange={(e) => changeLanguage(e.target.value)}>
+                    <MenuItem value="en">English</MenuItem>
+                    <MenuItem value="ko">한국어</MenuItem>
+                </Select>
+            </div>
             <Button variant="contained" color="primary" onClick={handleAddNewClick} style={{marginBottom: '10px'}}>
-                새 몰드 추가
+                {t('Add New Mold')}
             </Button>
-            {/* 조회 버튼 추가 */}
             <Button variant="contained" color="primary" onClick={handleSearchClick} style={{ marginBottom: '10px' }}>
-                몰드 조회
+                {t('Search Molds')}
             </Button>
             {isAddingNew && (
                 <Paper style={{padding: '15px', marginBottom: '10px'}}>
-                    <Typography variant="h6">새 몰드 추가</Typography>
-                    <TextField
-                        label="몰드 ID"
+                    <Typography variant="h6">{t('New Mold')}</Typography>
+                    <TextField  label={t('Mold ID')}
                         value={newMoldId}
                         onChange={(e) => setNewMoldId(e.target.value)}
                         fullWidth
                         margin="normal"
+                        id="newMoldId"
+                        name="newMoldId"
                     />
                     <Select
-                        label="상태"
+                        label={t('Status')}
                         value={newStatus}
                         onChange={(e) => setNewStatus(e.target.value)}
                         fullWidth
                         margin="normal"
+                        id="newStatus"
+                        name="newStatus"
+                        labelId="status-label"
                     >
-                        <MenuItem value="Received">Received</MenuItem>
-                        <MenuItem value="Shipped">Shipped</MenuItem>
+                        <MenuItem value="Received">{t('Received')}</MenuItem>
+                        <MenuItem value="Shipped">{t('Shipped')}</MenuItem>
+                        <MenuItem value="WAITING">{t('WAITING')}</MenuItem>
+                        <MenuItem value="PASS">{t('PASS')}</MenuItem>
+                        <MenuItem value="FAIL">{t('FAIL')}</MenuItem>
                         {/* 필요한 상태 옵션 추가 */}
                     </Select>
                     <TextField
-                        label="상태 날짜/시간"
+                        label={t('Status Date/Time')}
                         type="datetime-local"
                         value={newStatusDate}
                         onChange={(e) => setNewStatusDate(e.target.value)}
                         fullWidth
                         margin="normal"
+                        InputLabelProps={{shrink: true}}
+                        id="newStatusDate"
+                        name="newStatusDate"
                     />
                     <Select
-                        label="검사 상태"
+                        label={t('Inspection Status')}
                         value={newInspectionStatus}
                         onChange={(e) => setNewInspectionStatus(e.target.value)}
                         fullWidth
                         margin="normal"
+                        id="newInspectionStatus"
+                        name="newInspectionStatus"
                     >
-                        <MenuItem value="WAITING">WAITING</MenuItem>
-                        <MenuItem value="PASS">PASS</MenuItem>
-                        <MenuItem value="FAIL">FAIL</MenuItem>
+                        <MenuItem value="WAITING">{t('WAITING')}</MenuItem>
+                        <MenuItem value="PASS">{t('PASS')}</MenuItem>
+                        <MenuItem value="FAIL">{t('FAIL')}</MenuItem>
                         {/* 필요한 검사 상태 옵션 추가 */}
                     </Select>
                     <TextField
-                        label="검사자"
+                        label={t('Inspector')}
                         value={newInspector}
                         onChange={(e) => setNewInspector(e.target.value)}
                         fullWidth
                         margin="normal"
+                        id="newInspector"
+                        name="newInspector"
                     />
-                    {/*}
-          <TextField
-            label="소유자 ID"
-            value={newOwnerId}
-            onChange={(e) => setNewOwnerId(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          */}
                     <TextField
-                        label="몰드 카운트"
+                        label={t('Mold Count')}
                         type="number"
                         value={newMoldCount}
                         onChange={(e) => setNewMoldCount(e.target.value)}
                         fullWidth
                         margin="normal"
+                        id="newMoldCount"
+                        name="newMoldCount"
                     />
                     <Button variant="contained" color="primary" onClick={handleSaveNewMold}
                             style={{marginRight: '10px'}}>
-                        저장
+                        {t('Save')}
                     </Button>
                     <Button variant="outlined" onClick={handleCancelAdd}>
-                        취소
+                        {t('Cancel')}
                     </Button>
                 </Paper>
             )}
@@ -234,19 +247,20 @@ function MoldList() {
             {isMobile ? (
                 molds.map((mold) => (
                     <Paper key={mold.id} style={{margin: '10px', padding: '15px'}}>
-                        <Typography variant="subtitle1">몰드 ID: {mold.mold_id}</Typography>
-                        <Typography variant="body2">상태: {mold.status}</Typography>
-                        <Typography variant="body2">상태 날짜: {mold.status_date}</Typography>
-                        <Typography variant="body2">검사 상태: {mold.inspection_status}</Typography>
-                        <Typography variant="body2">검사자: {mold.inspector}</Typography>
-                        <Typography variant="body2" className="owner-id">소유자 ID: {mold.owner_id}</Typography>
-                        <Typography variant="body2">몰드 카운트: {mold.mold_count}</Typography>
+                        <Typography variant="subtitle1">{t('Mold ID')}: {mold.mold_id}</Typography>
+                        <Typography variant="body2">{t('Status')}: {mold.status}</Typography>
+                        <Typography variant="body2">{t('Status Date')}: {mold.status_date}</Typography>
+                        <Typography
+                            variant="body2">{t('Inspection Status')}: {mold.inspection_status}</Typography>
+                        <Typography variant="body2">{t('Inspector')}: {mold.inspector}</Typography>
+                        <Typography variant="body2"
+                                    className="owner-id">{t('Owner ID')}: {mold.owner_id}</Typography>
+                        <Typography variant="body2">{t('Mold Count')}: {mold.mold_count}</Typography>
                         <Button size="small" color="secondary" onClick={() => handleDelete(mold.id)}
                                 style={{marginRight: '5px'}}>
-                            삭제
-                        </Button>
+                            {t('Delete')}</Button>
                         <Link to={`/mold-edit/${mold.id}`} style={{textDecoration: 'none'}}>
-                            <Button size="small" color="primary">수정</Button>
+                            <Button size="small" color="primary">{t('Edit')}</Button>
                         </Link>
                     </Paper>
                 ))
@@ -255,16 +269,16 @@ function MoldList() {
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell>ID</TableCell>
-                                <TableCell>몰드 ID</TableCell>
-                                <TableCell>상태</TableCell>
-                                <TableCell>상태 날짜</TableCell>
-                                <TableCell>검사 상태</TableCell>
-                                <TableCell>검사자</TableCell>
-                                <StyledTableCell className="owner-id">소유자 ID</StyledTableCell>
-                                <TableCell>몰드 카운트</TableCell>
-                                <TableCell>삭제</TableCell>
-                                <TableCell>수정</TableCell>
+                                <TableCell>{t('ID')}</TableCell>
+                                <TableCell>{t('Mold ID')}</TableCell>
+                                <TableCell>{t('Status')}</TableCell>
+                                <TableCell>{t('Status Date')}</TableCell>
+                                <TableCell>{t('Inspection Status')}</TableCell>
+                                <TableCell>{t('Inspector')}</TableCell>
+                                <StyledTableCell className="owner-id">{t('Owner ID')}</StyledTableCell>
+                                <TableCell>{t('Mold Count')}</TableCell>
+                                <TableCell>{t('Delete')}</TableCell>
+                                <TableCell>{t('Edit')}</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -281,13 +295,13 @@ function MoldList() {
                                     <TableCell>
                                         <Button variant="outlined" color="secondary"
                                                 onClick={() => handleDelete(mold.id)} size="small">
-                                            삭제
+                                            {t('Delete')}
                                         </Button>
                                     </TableCell>
                                     <TableCell>
                                         <Link to={`/mold-edit/${mold.id}`} style={{textDecoration: 'none'}}>
                                             <Button variant="outlined" color="primary" size="small">
-                                                수정
+                                                {t('Edit')}
                                             </Button>
                                         </Link>
                                     </TableCell>
@@ -299,10 +313,9 @@ function MoldList() {
             )}
 
             <Button variant="contained" color="primary" onClick={handleLogout} style={{marginTop: '20px'}}>
-                로그아웃
-            </Button>
+                {t('Logout')}</Button>
         </div>
     );
 }
-export default MoldList;
 
+export default MoldList;

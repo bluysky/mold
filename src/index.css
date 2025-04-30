@@ -8,6 +8,9 @@ body {
   background-color: #f0f0f0; /* 기본적인 배경색 */
   color: #333; /* 기본적인 글자색 */
   line-height: 1.5; /* 기본적인 줄 간격 (가독성 향상) */
+  /* background-image: url('/mold.png'); */
+  background-size: cover; /* 화면에 꽉 차게 표시 (선택 사항) */
+  background-repeat: no-repeat; /* 이미지 반복 방지 (선택 사항) */
 }
 
 code {

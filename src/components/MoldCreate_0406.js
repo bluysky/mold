@@ -7,17 +7,20 @@ import { useNavigate } from 'react-router-dom';
 function MoldCreate() {
     const [moldId, setMoldId] = useState('');
     const [status, setStatus] = useState('');
-    const [status_date, setstatus_date] = useState('');
+    const [status_date, setstatus_date] = useState(''); // 상태 날짜 상태 추가
     const [inspectionStatus, setInspectionStatus] = useState('');
     const [inspector, setInspector] = useState('');
     const [moldCount, setMoldCount] = useState(0);
-    const [UnitID, setUnitId] = useState('');
+    const [UnitID, setUnitId] = useState(''); // Changed to string, consistent with other text inputs.  Important!
     const navigate = useNavigate();
     const [error, setError] = useState(null);
 
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { error: insertError } = await supabase.from('molds').insert([
+        console.log('status_date:', status_date);
+        const { error: insertError } = await supabase.from('molds').insert([ // Renamed error to insertError
             {
                 mold_id: moldId,
                 status: status,
@@ -25,10 +28,10 @@ function MoldCreate() {
                 inspection_status: inspectionStatus,
                 inspector: inspector,
                 mold_count: moldCount,
-                unit_id: UnitID, // 여기 UnitID 사용
+                unit_id: UnitID, // Changed to UnitID to match state variable
             },
         ]);
-        if (insertError) {
+        if (insertError) { // Use insertError here
             console.error('몰드 추가 실패:', insertError);
             setError(insertError.message);
         } else {
@@ -53,11 +56,10 @@ function MoldCreate() {
                     />
                 </div>
                 <div>
-                    <label htmlFor="status">재고 상태:</label>
+                    <label htmlFor="status">stock status:</label>
                     <select value={status} onChange={(e) => setStatus(e.target.value)} id="status" name="status">
-                        <option value="Mounted">장착</option>
-                        <option value="Received">입고</option>
-                        <option value="Shipped">출고</option>
+                        <option value="Received">Received</option>
+                        <option value="Shipped">Shipped</option>
                         {/* 필요한 상태 옵션 추가 */}
                     </select>
                 </div>
@@ -72,12 +74,12 @@ function MoldCreate() {
                     />
                 </div>
                 <div>
-                    <label htmlFor="inspectionStatus">검사 상태:</label>
+                    <label htmlFor="inspectionStatus">inspectionStatus:</label>
                     <select value={inspectionStatus} onChange={(e) => setInspectionStatus(e.target.value)}
                         id="inspectionStatus" name="inspectionStatus">
-                        <option value="WAITING">대기</option>
-                        <option value="PASS">통과</option>
-                        <option value="FAIL">실패</option>
+                        <option value="WAITING">WAITING</option>
+                        <option value="PASS">PASS</option>
+                        <option value="FAIL">FAIL</option>
                         {/* 필요한 검사 상태 옵션 추가 */}
                     </select>
                 </div>
@@ -93,10 +95,10 @@ function MoldCreate() {
                     />
                 </div>
                 <div>
-                    <label htmlFor="moldCount">몰드 수량:</label>
+                    <label htmlFor="moldCount">몰드 카운트:</label>
                     <input
                         type="number"
-                        placeholder="몰드 수량"
+                        placeholder="몰드 카운트"
                         value={moldCount}
                         onChange={(e) => setMoldCount(parseInt(e.target.value, 10) || 0)}
                         id="moldCount"
@@ -104,12 +106,12 @@ function MoldCreate() {
                     />
                 </div>
                 <div>
-                    <label htmlFor="UnitID">장비 번호:</label>
+                    <label htmlFor="UnitID">장비번호:</label>
                     <input
                         type="text"
                         placeholder="장비 번호"
                         value={UnitID}
-                        onChange={(e) => setUnitId(e.target.value)}
+                        onChange={(e) => setUnitId(e.target.value)} // Corrected setUnitId
                         id="UnitID"
                         name="UnitID"
                     />

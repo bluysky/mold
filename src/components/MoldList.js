@@ -22,7 +22,8 @@ import {
   Stack,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { createClient } from '@supabase/supabase-js';
+// import { createClient } from '@supabase/supabase-js'; // 이 줄은 제거합니다.
+import { supabase } from '../supabaseClient'; // supabaseClient.js에서 export한 supabase 객체를 import 합니다.
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.owner-id`]: {
@@ -33,11 +34,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// const supabaseUrl = process.env.REACT_APP_SUPABASE_URL; // 이 줄은 제거합니다.
+// const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY; // 이 줄은 제거합니다.
+// const supabase = createClient(supabaseUrl, supabaseKey); // 이 줄은 제거합니다.
 
 function MoldList() {
+  // ... 나머지 MoldList 컴포넌트 코드는 그대로 유지합니다.
   const [molds, setMolds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
